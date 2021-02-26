@@ -38,8 +38,7 @@ class _ProfileViewState extends State<ProfileView> {
                           SharedPrefs.sharedClear();
                           Navigator.pushAndRemoveUntil(
                               context,
-                              CupertinoPageRoute(
-                                  builder: (context) => LoginAndRegisterView()),
+                              CupertinoPageRoute(builder: (context) => LoginAndRegisterView()),
                               (_) => false);
                         },
                         child: Text("Exit"),
@@ -53,5 +52,5 @@ class _ProfileViewState extends State<ProfileView> {
     );
   }
 
-  Future<> getUserInformation() async{}
+  Future<void> getUserInformation() async {}
 }

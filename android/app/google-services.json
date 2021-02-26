@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "618724190893",
+    "project_id": "speakmatch-d4c97",
+    "storage_bucket": "speakmatch-d4c97.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:618724190893:android:16010e3acbb0e84af5f424",
+        "android_client_info": {
+          "package_name": "com.guha.speakmatch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "618724190893-2qfntc0nrr297rv9b4icnhrma2q64oqs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAiGCpO8DR9aaMoVmOuASpBUOAUTm9bzNo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "618724190893-2qfntc0nrr297rv9b4icnhrma2q64oqs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
