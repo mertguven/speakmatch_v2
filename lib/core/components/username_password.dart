@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:speakmatch/controller/signin-signup/auth_controller.dart';
-import 'package:speakmatch/locator.dart';
-import 'package:speakmatch/model/signin_signup/AuthSurrogateRequestMessage.dart';
-import 'package:speakmatch/view/home/home_view.dart';
+import 'package:speakmatch_v2/controller/signin-signup/auth_controller.dart';
+import 'package:speakmatch_v2/locator.dart';
+import 'package:speakmatch_v2/model/signin_signup/AuthSurrogateRequestMessage.dart';
 import 'package:get/get.dart';
+import 'package:speakmatch_v2/view/main/main_view.dart';
 
 class UsernamePasswordButton extends StatefulWidget {
   final String whichProcess;
@@ -170,7 +170,7 @@ class _UsernamePasswordButtonState extends State<UsernamePasswordButton>
         if (responseMessage.success) {
           Navigator.pushAndRemoveUntil(
               context,
-              CupertinoPageRoute(builder: (context) => HomeView()),
+              CupertinoPageRoute(builder: (context) => MainView()),
               (_) => false);
         } else {
           customSnackbar(responseMessage.success, responseMessage.messages);

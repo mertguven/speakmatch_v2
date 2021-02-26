@@ -1,6 +1,6 @@
-import 'package:speakmatch/model/signin_signup/AuthSurrogateRequestMessage.dart';
-import 'package:speakmatch/model/signin_signup/LoginResponseMessage.dart';
-import 'package:speakmatch/model/signin_signup/RegisterResponseMessage.dart';
+import 'package:speakmatch_v2/model/signin_signup/AuthSurrogateRequestMessage.dart';
+import 'package:speakmatch_v2/model/signin_signup/LoginResponseMessage.dart';
+import 'package:speakmatch_v2/model/signin_signup/RegisterResponseMessage.dart';
 
 abstract class IAuthBase {
   Future<LoginResponseMessage> signIn(AuthSurrogateRequestMessage request);

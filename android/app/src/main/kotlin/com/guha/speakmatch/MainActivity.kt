@@ -1,4 +1,4 @@
-package com.example.speakmatch_v2
+package com.guha.speakmatch
 
 import io.flutter.embedding.android.FlutterActivity
 

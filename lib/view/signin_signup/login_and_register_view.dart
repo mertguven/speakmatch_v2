@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:speakmatch/core/components/logo.dart';
-import 'package:speakmatch/core/components/username_password.dart';
-import 'package:speakmatch/core/extension/device_screen_size.dart';
+import 'package:speakmatch_v2/core/components/logo.dart';
+import 'package:speakmatch_v2/core/components/username_password.dart';
+import 'package:speakmatch_v2/core/extension/device_screen_size.dart';
 import 'package:lottie/lottie.dart';
 
 class LoginAndRegisterView extends StatefulWidget {
@@ -51,7 +51,7 @@ class _LoginAndRegisterViewState extends State<LoginAndRegisterView>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xff1F2A5D),
+      backgroundColor: Theme.of(context).accentColor,
       body: Stack(
         children: [
           waterAnimationsFractionallySizedBox("right"),

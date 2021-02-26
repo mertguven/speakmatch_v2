@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:speakmatch/locator.dart';
-import 'package:speakmatch/shared-prefs.dart';
-import 'package:speakmatch/view/splash/splash_view.dart';
+import 'package:speakmatch_v2/locator.dart';
+import 'package:speakmatch_v2/shared-prefs.dart';
+import 'package:speakmatch_v2/view/splash/splash_view.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

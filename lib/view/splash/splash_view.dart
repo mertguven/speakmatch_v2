@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:speakmatch/core/components/logo.dart';
-import 'package:speakmatch/shared-prefs.dart';
-import 'package:speakmatch/view/home/home_view.dart';
-import 'package:speakmatch/view/signin_signup/login_and_register_view.dart';
+import 'package:speakmatch_v2/core/components/logo.dart';
+import 'package:speakmatch_v2/shared-prefs.dart';
+import 'package:speakmatch_v2/view/main/main_view.dart';
+import 'package:speakmatch_v2/view/signin_signup/login_and_register_view.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -53,7 +53,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xff1F2A5D),
+      backgroundColor: Theme.of(context).accentColor,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -74,7 +74,7 @@ class _SplashScreenState extends State<SplashScreen>
   Future pageRotate() async {
     if (SharedPrefs.getLogin) {
       print("user token: " + SharedPrefs.getToken);
-      waiting(HomeView());
+      waiting(MainView());
     } else {
       waiting(LoginAndRegisterView());
     }

@@ -1,10 +1,10 @@
-import 'package:speakmatch/controller/interfaces/iauth_base.dart';
-import 'package:speakmatch/locator.dart';
-import 'package:speakmatch/model/signin_signup/AuthSurrogateRequestMessage.dart';
-import 'package:speakmatch/model/signin_signup/LoginResponseMessage.dart';
-import 'package:speakmatch/model/signin_signup/RegisterResponseMessage.dart';
-import 'package:speakmatch/service/web_service.dart';
-import 'package:speakmatch/shared-prefs.dart';
+import 'package:speakmatch_v2/controller/interfaces/iauth_base.dart';
+import 'package:speakmatch_v2/locator.dart';
+import 'package:speakmatch_v2/model/signin_signup/AuthSurrogateRequestMessage.dart';
+import 'package:speakmatch_v2/model/signin_signup/LoginResponseMessage.dart';
+import 'package:speakmatch_v2/model/signin_signup/RegisterResponseMessage.dart';
+import 'package:speakmatch_v2/service/web_service.dart';
+import 'package:speakmatch_v2/shared-prefs.dart';
 
 class AuthController implements IAuthBase {
   WebService authController = locator<WebService>();

@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'package:speakmatch/shared-prefs.dart';
-import 'package:speakmatch/utilities/GlobalVariables.dart';
+import 'package:speakmatch_v2/shared-prefs.dart';
+import 'package:speakmatch_v2/utilities/GlobalVariables.dart';
 import 'package:http/http.dart' as http;
 
 class WebService {
