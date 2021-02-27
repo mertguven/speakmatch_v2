@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:speakmatch_v2/core/components/logo.dart';
 import 'package:speakmatch_v2/core/components/username_password.dart';
@@ -10,7 +11,8 @@ class LoginAndRegisterView extends StatefulWidget {
   _LoginAndRegisterViewState createState() => _LoginAndRegisterViewState();
 }
 
-class _LoginAndRegisterViewState extends State<LoginAndRegisterView> with TickerProviderStateMixin {
+class _LoginAndRegisterViewState extends State<LoginAndRegisterView>
+    with TickerProviderStateMixin {
   String whichButtonIsItClicked;
   AnimationController _loginController;
   AnimationController _registerController;
@@ -23,16 +25,17 @@ class _LoginAndRegisterViewState extends State<LoginAndRegisterView> with Ticker
   @override
   void initState() {
     super.initState();
-    _waterAnimationController =
-        AnimationController(value: this, duration: Duration(milliseconds: 1500));
-    _waterAnimation = Tween(begin: 0.0, end: 0.8).animate(_waterAnimationController)
-      ..addListener(() {
-        setState(() {});
-      });
-    _loginController =
-        AnimationController(duration: const Duration(milliseconds: 1000), value: this);
-    _registerController =
-        AnimationController(duration: const Duration(milliseconds: 1000), value: this);
+    _waterAnimationController = AnimationController(
+        vsync: this, duration: Duration(milliseconds: 1500));
+    _waterAnimation =
+        Tween(begin: 0.0, end: 0.8).animate(_waterAnimationController)
+          ..addListener(() {
+            setState(() {});
+          });
+    _loginController = AnimationController(
+        duration: const Duration(milliseconds: 1000), vsync: this);
+    _registerController = AnimationController(
+        duration: const Duration(milliseconds: 1000), vsync: this);
 
     _waterAnimationController.forward();
     buttonsAnimation();
@@ -50,12 +53,19 @@ class _LoginAndRegisterViewState extends State<LoginAndRegisterView> with Ticker
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).accentColor,
-      body: Stack(
-        children: [
-          waterAnimationsFractionallySizedBox("right"),
-          waterAnimationsFractionallySizedBox("left"),
-          allContainerWithoutBackground(),
-        ],
+      body: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.light.copyWith(
+          statusBarColor: Colors.transparent,
+        ),
+        child: SafeArea(
+          child: Stack(
+            children: [
+              waterAnimationsFractionallySizedBox("right"),
+              waterAnimationsFractionallySizedBox("left"),
+              allContainerWithoutBackground(),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -77,7 +87,8 @@ class _LoginAndRegisterViewState extends State<LoginAndRegisterView> with Ticker
 
   Align waterAnimationsFractionallySizedBox(String whichAnimation) {
     return Align(
-      alignment: whichAnimation == "right" ? Alignment.topRight : Alignment.bottomLeft,
+      alignment:
+          whichAnimation == "right" ? Alignment.topRight : Alignment.bottomLeft,
       child: FractionallySizedBox(
           widthFactor: _waterAnimation.value,
           child: Lottie.asset(
@@ -227,7 +238,9 @@ class _LoginAndRegisterViewState extends State<LoginAndRegisterView> with Ticker
       end: whichButtonIsItClicked == "login" ? Offset(2, 0) : Offset(-2, 0),
     ).animate(CurvedAnimation(
       curve: Curves.easeInOutBack,
-      parent: whichButtonIsItClicked == "login" ? _loginController : _registerController,
+      parent: whichButtonIsItClicked == "login"
+          ? _loginController
+          : _registerController,
     ));
 
     _signInContainerOffsetAnimation = Tween<Offset>(

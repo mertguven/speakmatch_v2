@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:speakmatch_v2/core/components/sm_bottom_navigation_bar.dart';
 import 'package:speakmatch_v2/view/main/couple/couple_view.dart';
@@ -18,7 +19,14 @@ class _MainViewState extends State<MainView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _currentView(_view),
+      body: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.light.copyWith(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: Brightness.dark),
+        child: SafeArea(
+          child: _currentView(_view),
+        ),
+      ),
       bottomNavigationBar: SMNavigationBar(
         color: Colors.white,
         height: 60,

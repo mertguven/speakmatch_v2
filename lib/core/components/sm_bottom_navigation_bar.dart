@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class SMNavigationBar extends StatefulWidget {
   final double height;
   final int index;

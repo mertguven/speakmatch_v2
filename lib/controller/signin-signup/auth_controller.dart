@@ -7,7 +7,7 @@ import 'package:speakmatch_v2/service/web_service.dart';
 import 'package:speakmatch_v2/shared-prefs.dart';
 
 class AuthController implements IAuthBase {
-  WebService authController = locator<WebService>();
+  WebService _webService = locator<WebService>();
   dynamic requestBody;
   @override
   Future<LoginResponseMessage> signIn(
@@ -16,7 +16,7 @@ class AuthController implements IAuthBase {
       "username": request.username,
       "password": request.password,
     };
-    final item = await authController.sendRequestWithPost("Login", requestBody);
+    final item = await _webService.sendRequestWithPost("Login", requestBody);
     var loginResponseMessage = LoginResponseMessage.fromJson(item);
     if (loginResponseMessage.success) {
       SharedPrefs.saveToken(loginResponseMessage.token);
@@ -32,8 +32,7 @@ class AuthController implements IAuthBase {
       "username": request.username,
       "password": request.password,
     };
-    final item =
-        await authController.sendRequestWithPost("Register", requestBody);
+    final item = await _webService.sendRequestWithPost("Register", requestBody);
     var registerResponseMessage = RegisterResponseMessage.fromJson(item);
     return registerResponseMessage;
   }
