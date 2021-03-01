@@ -14,10 +14,7 @@ class WebService {
   Future<dynamic> sendRequestWithPostAndToken(String url, dynamic body) async {
     var result = await http.post(
       GlobalVariables.baseUrl(url),
-      headers: {
-        'Authorization':
-            'Bearer ' + SharedPrefs.getToken == null ? "" : SharedPrefs.getToken
-      },
+      headers: {'Authorization': 'Bearer ' + SharedPrefs.getToken},
       body: json.encode(body),
     );
     var jsonResponse = json.decode(result.body);

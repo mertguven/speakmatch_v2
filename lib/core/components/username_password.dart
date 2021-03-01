@@ -2,8 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:speakmatch_v2/controller/signin-signup/auth_controller.dart';
 import 'package:speakmatch_v2/locator.dart';
-import 'package:speakmatch_v2/model/signin_signup/AuthSurrogateRequestMessage.dart';
 import 'package:get/get.dart';
+import 'package:speakmatch_v2/model/signin_signup/request/LoginRequestMessage.dart';
+import 'package:speakmatch_v2/model/signin_signup/request/RegisterRequestMessage.dart';
 import 'package:speakmatch_v2/view/main/main_view.dart';
 
 class UsernamePasswordButton extends StatefulWidget {
@@ -163,9 +164,10 @@ class _UsernamePasswordButtonState extends State<UsernamePasswordButton>
       customSnackbar(false, "Please be sure to enter the information");
     } else {
       AuthController authController = locator<AuthController>();
-      AuthSurrogateRequestMessage requestMessage =
-          AuthSurrogateRequestMessage(username: userName, password: password);
+
       if (whichProcess == "login") {
+        LoginRequestMessage requestMessage =
+            LoginRequestMessage(username: userName, password: password);
         var responseMessage = await authController.signIn(requestMessage);
         if (responseMessage.success) {
           Navigator.pushAndRemoveUntil(
@@ -176,6 +178,8 @@ class _UsernamePasswordButtonState extends State<UsernamePasswordButton>
           customSnackbar(responseMessage.success, responseMessage.messages);
         }
       } else {
+        RegisterRequestMessage requestMessage =
+            RegisterRequestMessage(username: userName, password: password);
         var responseMessage = await authController.signUp(requestMessage);
         if (responseMessage.success) {
           widget.controller.reverse();

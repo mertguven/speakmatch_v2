@@ -1,8 +1,9 @@
 import 'package:speakmatch_v2/controller/interfaces/iauth_base.dart';
 import 'package:speakmatch_v2/locator.dart';
-import 'package:speakmatch_v2/model/signin_signup/AuthSurrogateRequestMessage.dart';
-import 'package:speakmatch_v2/model/signin_signup/LoginResponseMessage.dart';
-import 'package:speakmatch_v2/model/signin_signup/RegisterResponseMessage.dart';
+import 'package:speakmatch_v2/model/signin_signup/request/LoginRequestMessage.dart';
+import 'package:speakmatch_v2/model/signin_signup/request/RegisterRequestMessage.dart';
+import 'package:speakmatch_v2/model/signin_signup/response/LoginResponseMessage.dart';
+import 'package:speakmatch_v2/model/signin_signup/response/RegisterResponseMessage.dart';
 import 'package:speakmatch_v2/service/web_service.dart';
 import 'package:speakmatch_v2/shared-prefs.dart';
 
@@ -10,8 +11,7 @@ class AuthController implements IAuthBase {
   WebService _webService = locator<WebService>();
   dynamic requestBody;
   @override
-  Future<LoginResponseMessage> signIn(
-      AuthSurrogateRequestMessage request) async {
+  Future<LoginResponseMessage> signIn(LoginRequestMessage request) async {
     requestBody = {
       "username": request.username,
       "password": request.password,
@@ -26,8 +26,7 @@ class AuthController implements IAuthBase {
   }
 
   @override
-  Future<RegisterResponseMessage> signUp(
-      AuthSurrogateRequestMessage request) async {
+  Future<RegisterResponseMessage> signUp(RegisterRequestMessage request) async {
     requestBody = {
       "username": request.username,
       "password": request.password,

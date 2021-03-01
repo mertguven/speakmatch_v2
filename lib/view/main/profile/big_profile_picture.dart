@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 // ignore: must_be_immutable
 class BigProfilePicture extends StatefulWidget {
   File image;
-  BigProfilePicture({this.image});
+  String url;
+  BigProfilePicture({this.image, this.url});
 
   @override
   _BigProfilePictureState createState() => _BigProfilePictureState();
@@ -29,7 +30,7 @@ class _BigProfilePictureState extends State<BigProfilePicture> {
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: widget.image == null
-                      ? AssetImage("assets/images/user.png")
+                      ? NetworkImage(widget.url)
                       : Image.file(widget.image).image,
                 ),
               ),

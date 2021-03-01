@@ -1,10 +1,10 @@
-class AuthSurrogateRequestMessage {
+class RegisterRequestMessage {
   String username;
   String password;
 
-  AuthSurrogateRequestMessage({this.username, this.password});
+  RegisterRequestMessage({this.username, this.password});
 
-  AuthSurrogateRequestMessage.fromJson(Map<String, dynamic> json) {
+  RegisterRequestMessage.fromJson(Map<String, dynamic> json) {
     username = json['username'];
     password = json['password'];
   }

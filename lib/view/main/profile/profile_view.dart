@@ -1,12 +1,11 @@
 import 'dart:io';
-import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:speakmatch_v2/controller/profile/profile_controller.dart';
 import 'package:speakmatch_v2/locator.dart';
-import 'package:speakmatch_v2/model/profile/GetUserInformationResponseMessage.dart';
+import 'package:speakmatch_v2/model/profile/response/GetUserInformationResponseMessage.dart';
 import 'package:speakmatch_v2/shared-prefs.dart';
 import 'package:speakmatch_v2/view/main/profile/big_profile_picture.dart';
 import 'package:speakmatch_v2/view/main/profile/drawer_list/change_password.dart';
@@ -35,15 +34,16 @@ class _ProfileViewState extends State<ProfileView> {
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
+        _upload(_image);
+        Navigator.pop(context);
       }
-      Navigator.pop(context);
     });
   }
 
   final Uri _emailLaunchUri = Uri(
       scheme: 'mailto',
       path: 'guhadestek@gmail.com',
-      queryParameters: {'subject': 'Subject'});
+      queryParameters: {'subject': '...'});
 
   @override
   Widget build(BuildContext context) {
@@ -110,10 +110,10 @@ class _ProfileViewState extends State<ProfileView> {
                         decoration:
                             BoxDecoration(color: Colors.white, boxShadow: [
                           BoxShadow(
-                              blurRadius: 10,
+                              blurRadius: 20,
                               color: Colors.black.withOpacity(0.1),
                               offset: Offset(0, 8),
-                              spreadRadius: 0.5),
+                              spreadRadius: 0.8),
                         ]),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -134,7 +134,9 @@ class _ProfileViewState extends State<ProfileView> {
                                             MaterialPageRoute(
                                                 builder: (context) =>
                                                     BigProfilePicture(
-                                                        image: _image))),
+                                                      image: _image,
+                                                      url: result.data.url,
+                                                    ))),
                                         child: Hero(
                                           tag: "photo",
                                           child: CircleAvatar(
@@ -142,8 +144,7 @@ class _ProfileViewState extends State<ProfileView> {
                                             backgroundColor:
                                                 Colors.grey.shade300,
                                             backgroundImage: _image == null
-                                                ? AssetImage(
-                                                    "assets/images/user.png")
+                                                ? NetworkImage(result.data.url)
                                                 : Image.file(_image).image,
                                             child: Align(
                                               alignment: Alignment.bottomRight,
@@ -199,9 +200,8 @@ class _ProfileViewState extends State<ProfileView> {
                     Expanded(
                       flex: 3,
                       child: Container(
-                        //margin: EdgeInsets.only(top: 5),
                         decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.02),
+                          color: Colors.white.withOpacity(0.001),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -385,5 +385,10 @@ class _ProfileViewState extends State<ProfileView> {
             ],
           );
         });
+  }
+
+  void _upload(File file) async {
+    ProfileController profileController = locator<ProfileController>();
+    await profileController.changeProfilePhoto(file);
   }
 }
