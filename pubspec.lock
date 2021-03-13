@@ -261,6 +261,7 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0"
+<<<<<<< Updated upstream
   path_provider:
     dependency: "direct main"
     description:
@@ -268,6 +269,8 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.6.27"
+=======
+>>>>>>> Stashed changes
   path_provider_linux:
     dependency: transitive
     description:
@@ -427,6 +430,7 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0"
+<<<<<<< Updated upstream
   sqflite:
     dependency: transitive
     description:
@@ -441,6 +445,8 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0+1"
+=======
+>>>>>>> Stashed changes
   stack_trace:
     dependency: transitive
     description:
@@ -462,6 +468,7 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
+<<<<<<< Updated upstream
   synchronized:
     dependency: transitive
     description:
@@ -469,6 +476,8 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.0"
+=======
+>>>>>>> Stashed changes
   term_glyph:
     dependency: transitive
     description:
@@ -569,4 +578,8 @@ packages:
     version: "4.5.1"
 sdks:
   dart: ">=2.12.0-0.0 <3.0.0"
+<<<<<<< Updated upstream
   flutter: ">=1.24.0-10"
+=======
+  flutter: ">=1.22.0"
+>>>>>>> Stashed changes
