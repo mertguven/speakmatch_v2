@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:speakmatch_v2/controller/signin-signup/auth_controller.dart';
-import 'package:speakmatch_v2/locator.dart';
 import 'package:get/get.dart';
 import 'package:speakmatch_v2/model/signin_signup/request/LoginRequestMessage.dart';
 import 'package:speakmatch_v2/model/signin_signup/request/RegisterRequestMessage.dart';
@@ -27,9 +27,9 @@ class _UsernamePasswordButtonState extends State<UsernamePasswordButton>
   Widget build(BuildContext context) {
     return Column(
       children: [
-        usernamePasswordTextFormField("Username"),
+        usernamePasswordTextFormField("Kullanıcı Adı"),
         SizedBox(height: 20),
-        usernamePasswordTextFormField("Password"),
+        usernamePasswordTextFormField("Şifre"),
         SizedBox(height: 30),
         usernameAndPasswordButtons(widget.whichProcess),
       ],
@@ -43,14 +43,16 @@ class _UsernamePasswordButtonState extends State<UsernamePasswordButton>
       ),
       child: TextFormField(
         cursorColor: Color(0xffD64565),
-        obscureText: isObscureButtonClicked && labelText == "Password",
+        obscureText: isObscureButtonClicked && labelText == "Şifre",
         onChanged: (entered) {
-          labelText == "Username" ? userName = entered : password = entered;
+          labelText == "Kullanıcı Adı"
+              ? userName = entered
+              : password = entered;
         },
         style: TextStyle(color: Colors.white),
         decoration: InputDecoration(
           labelText: labelText,
-          suffixIcon: labelText == "Username"
+          suffixIcon: labelText == "Kullanıcı Adı"
               ? Icon(Icons.person, color: Colors.white)
               : IconButton(
                   icon: Icon(
@@ -89,67 +91,69 @@ class _UsernamePasswordButtonState extends State<UsernamePasswordButton>
         children: [
           Expanded(
             flex: 4,
-            child: RaisedButton(
-              color: Colors.white,
-              padding: EdgeInsets.symmetric(vertical: 15),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(vertical: 15),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                primary: Colors.white,
               ),
-              onPressed: () {
-                loginOrRegister("login");
-              },
+              onPressed: () => loginOrRegister("login"),
               child: Text(
-                "Login",
+                "Giriş Yap",
                 style: TextStyle(color: Color(0xff1F2A5D), fontSize: 16),
               ),
             ),
           ),
           SizedBox(width: 10),
-          RaisedButton(
-              color: Color(0xfff3b000),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
               padding: EdgeInsets.symmetric(vertical: 15),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
-              onPressed: () {
-                widget.controller.reverse();
-              },
-              child: Icon(
-                Icons.arrow_forward,
-                color: Colors.white,
-              )),
+              primary: Color(0xfff3b000),
+            ),
+            onPressed: () => widget.controller.reverse(),
+            child: Icon(
+              Icons.arrow_forward,
+              color: Colors.white,
+            ),
+          ),
         ],
       );
     } else {
       return Row(
         children: [
-          RaisedButton(
-              color: Color(0xffD64565),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
               padding: EdgeInsets.symmetric(vertical: 15),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
-              onPressed: () {
-                widget.controller.reverse();
-              },
-              child: Icon(
-                Icons.arrow_back,
-                color: Colors.white,
-              )),
+              primary: Color(0xffD64565),
+            ),
+            onPressed: () => widget.controller.reverse(),
+            child: Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ),
+          ),
           SizedBox(width: 10),
           Expanded(
             flex: 4,
-            child: RaisedButton(
-              color: Colors.white,
-              padding: EdgeInsets.symmetric(vertical: 15),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(vertical: 15),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                primary: Colors.white,
               ),
-              onPressed: () {
-                loginOrRegister("register");
-              },
+              onPressed: () => loginOrRegister("register"),
               child: Text(
-                "Register",
+                "Kayıt Ol",
                 style: TextStyle(color: Color(0xff1F2A5D), fontSize: 16),
               ),
             ),
@@ -161,9 +165,10 @@ class _UsernamePasswordButtonState extends State<UsernamePasswordButton>
 
   Future<void> loginOrRegister(String whichProcess) async {
     if (userName == "" || password == "") {
-      customSnackbar(false, "Please be sure to enter the information");
+      customSnackbar(false, "Lütfen tüm alanları doldurunuz.");
     } else {
-      AuthController authController = locator<AuthController>();
+      final authController =
+          Provider.of<AuthController>(context, listen: false);
 
       if (whichProcess == "login") {
         LoginRequestMessage requestMessage =
@@ -183,8 +188,8 @@ class _UsernamePasswordButtonState extends State<UsernamePasswordButton>
         var responseMessage = await authController.signUp(requestMessage);
         if (responseMessage.success) {
           widget.controller.reverse();
-          customSnackbar(responseMessage.success,
-              "Registration successful. You can login.");
+          customSnackbar(
+              responseMessage.success, "Kayıt başarılı. Giriş yapabilirsin!");
         } else {
           customSnackbar(responseMessage.success, responseMessage.messages);
         }

@@ -8,9 +8,12 @@ class CoupleView extends StatefulWidget {
 class _CoupleViewState extends State<CoupleView> {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        child: Text("Couple View"),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Center(
+        child: Container(
+          child: Text("Couple View"),
+        ),
       ),
     );
   }

@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:speakmatch_v2/controller/interfaces/iprofile_base.dart';
-import 'package:speakmatch_v2/locator.dart';
 import 'package:speakmatch_v2/model/profile/request/ChangeUserInformationRequestMessage.dart';
 import 'package:speakmatch_v2/model/profile/response/ChangePasswordResponseMessage.dart';
 import 'package:speakmatch_v2/model/profile/request/ChangePasswordRequestMessage.dart';
@@ -11,40 +11,40 @@ import 'package:speakmatch_v2/model/profile/response/UploadImageResponseMessage.
 import 'package:speakmatch_v2/service/web_service.dart';
 import 'package:speakmatch_v2/shared-prefs.dart';
 
-class ProfileController implements IProfileBase {
-  WebService _webService = locator<WebService>();
+class ProfileController with ChangeNotifier implements IProfileBase {
+  WebService _webService = WebService();
   dynamic _requestBody;
+  String changePhotoUrl;
   @override
   Future<GetUserInformationResponseMessage> getUserInformation() async {
     final item = await _webService.sendRequestWithGet("GetUserByToken");
     var getUserInformationResponseMessage =
         GetUserInformationResponseMessage.fromJson(item);
+    notifyListeners();
     return getUserInformationResponseMessage;
   }
 
   @override
   Future<UploadImageResponseMessage> changeProfilePhoto(File file) async {
-    var uploadImageResponseMessage;
     Dio dio = new Dio();
     String fileName = file.path.split('/').last;
+    dio.options = BaseOptions(
+        baseUrl: "http://45.55.44.174/SM/",
+        method: "POST",
+        headers: {'Authorization': 'Bearer ' + SharedPrefs.getToken});
 
     FormData data = FormData.fromMap({
-      "img_data": await MultipartFile.fromFile(
+      "image": await MultipartFile.fromFile(
         file.path,
         filename: fileName,
       ),
     });
 
-    dio
-        .post("http://45.55.44.174/SM/UploadImage",
-            options: Options(
-                headers: {'Authorization': 'Bearer ' + SharedPrefs.getToken}),
-            data: data)
-        .then((response) {
-      uploadImageResponseMessage =
-          UploadImageResponseMessage.fromJson(response.data);
-    }).catchError((error) => print(error));
-
+    var response = await dio.post("UploadImage", data: data);
+    var uploadImageResponseMessage =
+        UploadImageResponseMessage.fromJson(response.data);
+    changePhotoUrl = uploadImageResponseMessage.url;
+    notifyListeners();
     return uploadImageResponseMessage;
   }
 

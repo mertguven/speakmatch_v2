@@ -1,5 +1,4 @@
 import 'package:speakmatch_v2/controller/interfaces/iauth_base.dart';
-import 'package:speakmatch_v2/locator.dart';
 import 'package:speakmatch_v2/model/signin_signup/request/LoginRequestMessage.dart';
 import 'package:speakmatch_v2/model/signin_signup/request/RegisterRequestMessage.dart';
 import 'package:speakmatch_v2/model/signin_signup/response/LoginResponseMessage.dart';
@@ -8,7 +7,7 @@ import 'package:speakmatch_v2/service/web_service.dart';
 import 'package:speakmatch_v2/shared-prefs.dart';
 
 class AuthController implements IAuthBase {
-  WebService _webService = locator<WebService>();
+  WebService _webService = WebService();
   dynamic requestBody;
   @override
   Future<LoginResponseMessage> signIn(LoginRequestMessage request) async {

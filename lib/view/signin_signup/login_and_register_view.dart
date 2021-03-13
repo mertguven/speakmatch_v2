@@ -53,19 +53,12 @@ class _LoginAndRegisterViewState extends State<LoginAndRegisterView>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).accentColor,
-      body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light.copyWith(
-          statusBarColor: Colors.transparent,
-        ),
-        child: SafeArea(
-          child: Stack(
-            children: [
-              waterAnimationsFractionallySizedBox("right"),
-              waterAnimationsFractionallySizedBox("left"),
-              allContainerWithoutBackground(),
-            ],
-          ),
-        ),
+      body: Stack(
+        children: [
+          waterAnimationsFractionallySizedBox("right"),
+          waterAnimationsFractionallySizedBox("left"),
+          allContainerWithoutBackground(),
+        ],
       ),
     );
   }
@@ -143,11 +136,11 @@ class _LoginAndRegisterViewState extends State<LoginAndRegisterView>
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Spacer(flex: 4),
-          signInAndSignUpButtons("Sign In With Google"),
+          signInAndSignUpButtons("Google ile giriş yap"),
           Spacer(),
-          signInAndSignUpButtons("Sign In"),
+          signInAndSignUpButtons("Giriş Yap"),
           Spacer(),
-          signInAndSignUpButtons("Sign Up"),
+          signInAndSignUpButtons("Kayıt Ol"),
           Spacer(flex: 4),
         ],
       ),
@@ -177,24 +170,26 @@ class _LoginAndRegisterViewState extends State<LoginAndRegisterView>
   FractionallySizedBox signInAndSignUpButtons(String text) {
     return FractionallySizedBox(
       widthFactor: 0.75,
-      child: RaisedButton(
-        padding: EdgeInsets.symmetric(vertical: 15),
-        color: text == "Sign In"
-            ? Color(0xfff3b000)
-            : text == "Sign In With Google"
-                ? Colors.white
-                : Color(0xffD64565),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          padding: EdgeInsets.symmetric(vertical: 15),
+          primary: text == "Giriş Yap"
+              ? Color(0xfff3b000)
+              : text == "Google ile giriş yap"
+                  ? Colors.white
+                  : Color(0xffD64565),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
         ),
         onPressed: () {
-          if (text == "Sign In") {
+          if (text == "Giriş Yap") {
             setState(() {
               whichButtonIsItClicked = "login";
               buttonsAnimation();
             });
             _loginController.forward();
-          } else if (text == "Sign Up") {
+          } else if (text == "Kayıt Ol") {
             setState(() {
               whichButtonIsItClicked = "register";
               buttonsAnimation();
@@ -202,7 +197,7 @@ class _LoginAndRegisterViewState extends State<LoginAndRegisterView>
             _registerController.forward();
           }
         },
-        child: text == "Sign In With Google"
+        child: text == "Google ile giriş yap"
             ? Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -227,7 +222,7 @@ class _LoginAndRegisterViewState extends State<LoginAndRegisterView>
 
   TextStyle buttonTextStyle(String text) {
     return TextStyle(
-      color: text == "Sign In With Google" ? Colors.blueGrey : Colors.white,
+      color: text == "Google ile giriş yap" ? Colors.blueGrey : Colors.white,
       fontSize: 16,
     );
   }

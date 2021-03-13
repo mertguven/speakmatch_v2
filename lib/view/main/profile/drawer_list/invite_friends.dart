@@ -1,6 +1,5 @@
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class InviteFriendsView extends StatefulWidget {
   @override
@@ -14,7 +13,7 @@ class _InviteFriendsViewState extends State<InviteFriendsView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Invite Friends"),
+        title: Text("Arkadaşlarını Davet Et"),
       ),
       /*body: FutureBuilder<List<Contact>>(
         future: getPermissions(),

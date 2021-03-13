@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:speakmatch_v2/controller/profile/profile_controller.dart';
-import 'package:speakmatch_v2/locator.dart';
 import 'package:speakmatch_v2/model/profile/request/ChangePasswordRequestMessage.dart';
 
 class ChangePasswordView extends StatefulWidget {
@@ -18,8 +18,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        //elevation: 0,
-        title: Text("Change Password"),
+        title: Text("Şifre Değiştir"),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -29,7 +28,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
             child: TextFormField(
               textInputAction: TextInputAction.done,
               decoration: InputDecoration(
-                hintText: "New Password",
+                hintText: "Yeni Şifre",
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Color(0xdddddddd)),
                   borderRadius: BorderRadius.circular(12),
@@ -48,23 +47,27 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
               },
             ),
           ),
-          Container(
-            margin: EdgeInsets.only(top: 30),
-            child: RaisedButton(
-              onPressed: () => saveChanges(newPassword),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15)),
-              elevation: 5,
-              hoverElevation: 5,
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 60),
-              color: Theme.of(context).accentColor,
-              child: Text(
-                "Save",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.5,
+          FractionallySizedBox(
+            widthFactor: 0.5,
+            child: Padding(
+              padding: EdgeInsets.only(top: 30),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(vertical: 15),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15)),
+                  primary: Theme.of(context).accentColor,
+                  elevation: 5,
+                ),
+                onPressed: () => saveChanges(newPassword),
+                child: Text(
+                  "Kaydet",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.5,
+                  ),
                 ),
               ),
             ),
@@ -75,15 +78,20 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
   }
 
   saveChanges(String newPassword) async {
-    ProfileController profileController = locator<ProfileController>();
-    var request = ChangePasswordRequestMessage(password: newPassword);
-    var response = await profileController.changePassword(request);
-    if (response.success) {
-      Navigator.pop(context);
-      Navigator.pop(context);
-      customSnackbar(response.success, response.messages);
+    if (newPassword != "") {
+      final profileController =
+          Provider.of<ProfileController>(context, listen: false);
+      var request = ChangePasswordRequestMessage(password: newPassword);
+      var response = await profileController.changePassword(request);
+      if (response.success) {
+        Navigator.pop(context);
+        Navigator.pop(context);
+        customSnackbar(response.success, response.messages);
+      } else {
+        customSnackbar(response.success, response.messages);
+      }
     } else {
-      customSnackbar(response.success, response.messages);
+      customSnackbar(false, "Please enter your new password!");
     }
   }
 

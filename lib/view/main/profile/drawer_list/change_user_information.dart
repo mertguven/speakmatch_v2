@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:speakmatch_v2/controller/profile/profile_controller.dart';
-import 'package:speakmatch_v2/locator.dart';
 import 'package:speakmatch_v2/model/profile/request/ChangeUserInformationRequestMessage.dart';
 import 'package:speakmatch_v2/model/profile/response/GetUserInformationResponseMessage.dart';
-import 'package:speakmatch_v2/core/extension/device_screen_size.dart';
 
 class ChangeUserInformationView extends StatefulWidget {
   @override
@@ -22,7 +21,7 @@ class _ChangeUserInformationViewState extends State<ChangeUserInformationView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Change User Information"),
+        title: Text("Kullanıcı Bilgileri"),
       ),
       body: FutureBuilder<GetUserInformationResponseMessage>(
         future: getUserInformation(),
@@ -35,8 +34,10 @@ class _ChangeUserInformationViewState extends State<ChangeUserInformationView> {
                         margin: EdgeInsets.only(left: 30, right: 30, top: 20),
                         child: TextField(
                           decoration: InputDecoration(
-                            hintText: result.data.username,
-                            counterText: "Username",
+                            hintText: result.data.username == null
+                                ? ""
+                                : result.data.username,
+                            counterText: "Kullanıcı Adı",
                             counterStyle: TextStyle(
                                 fontWeight: FontWeight.w600, fontSize: 14),
                             focusedBorder: UnderlineInputBorder(
@@ -60,8 +61,9 @@ class _ChangeUserInformationViewState extends State<ChangeUserInformationView> {
                                   color: Theme.of(context).accentColor,
                                   width: 2),
                             ),
-                            hintText: result.data.age,
-                            counterText: "Age",
+                            hintText:
+                                result.data.age == null ? "" : result.data.age,
+                            counterText: "Yaş",
                             counterStyle: TextStyle(
                                 fontWeight: FontWeight.w600, fontSize: 14),
                           ),
@@ -80,8 +82,10 @@ class _ChangeUserInformationViewState extends State<ChangeUserInformationView> {
                                     color: Theme.of(context).accentColor,
                                     width: 2),
                               ),
-                              hintText: result.data.email,
-                              counterText: "Email",
+                              hintText: result.data.email == null
+                                  ? ""
+                                  : result.data.email,
+                              counterText: "E-Posta",
                               counterStyle: TextStyle(
                                   fontWeight: FontWeight.w600, fontSize: 14)),
                           onChanged: (girilen) {
@@ -99,9 +103,11 @@ class _ChangeUserInformationViewState extends State<ChangeUserInformationView> {
                             color: Theme.of(context).accentColor,
                           ),
                           title: Text(
-                            gender == null
-                                ? result.data.sex.toUpperCase()
-                                : gender.toUpperCase(),
+                            gender != null
+                                ? gender
+                                : result.data.sex == null
+                                    ? "Cinsiyet"
+                                    : result.data.sex,
                             style: TextStyle(
                                 fontWeight: FontWeight.w600, fontSize: 16),
                           ),
@@ -111,16 +117,17 @@ class _ChangeUserInformationViewState extends State<ChangeUserInformationView> {
                         width: double.infinity,
                         margin:
                             EdgeInsets.symmetric(horizontal: 14, vertical: 30),
-                        child: RaisedButton(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.symmetric(vertical: 15),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15)),
+                            primary: Theme.of(context).accentColor,
+                            elevation: 5,
+                          ),
                           onPressed: () => saveChanges(result.data),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15)),
-                          elevation: 5,
-                          hoverElevation: 5,
-                          padding: EdgeInsets.symmetric(vertical: 15),
-                          color: Theme.of(context).accentColor,
                           child: Text(
-                            "Save",
+                            "Kaydet",
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 18,
@@ -140,7 +147,8 @@ class _ChangeUserInformationViewState extends State<ChangeUserInformationView> {
   }
 
   Future<GetUserInformationResponseMessage> getUserInformation() async {
-    ProfileController profileController = locator<ProfileController>();
+    final profileController =
+        Provider.of<ProfileController>(context, listen: false);
     return await profileController.getUserInformation();
   }
 
@@ -149,7 +157,7 @@ class _ChangeUserInformationViewState extends State<ChangeUserInformationView> {
         context: context,
         builder: (BuildContext context) {
           return SimpleDialog(
-            title: Text("Select your gender"),
+            title: Text("Cinsiyetini Seç"),
             children: [
               genderOptions(0),
               genderOptions(1),
@@ -164,11 +172,12 @@ class _ChangeUserInformationViewState extends State<ChangeUserInformationView> {
       onPressed: () {
         setState(() {
           gender = index == 0
-              ? "Male"
+              ? "Erkek"
               : index == 1
-                  ? "Female"
-                  : "Other";
+                  ? "Kadın"
+                  : "Diğer";
         });
+        print(gender);
         Navigator.pop(context);
       },
       child: Row(
@@ -177,10 +186,10 @@ class _ChangeUserInformationViewState extends State<ChangeUserInformationView> {
           SizedBox(width: 20),
           Text(
             index == 0
-                ? "Male"
+                ? "Erkek"
                 : index == 1
-                    ? "Female"
-                    : "Other",
+                    ? "Kadın"
+                    : "Diğer",
             style: TextStyle(fontSize: 18),
           ),
         ],
@@ -203,7 +212,8 @@ class _ChangeUserInformationViewState extends State<ChangeUserInformationView> {
   }
 
   saveChanges(GetUserInformationResponseMessage data) async {
-    ProfileController profileController = locator<ProfileController>();
+    final profileController =
+        Provider.of<ProfileController>(context, listen: false);
     var request = ChangeUserInformationRequestMessage(
       username: username == null ? data.username : username,
       age: age == null ? data.age : age,
