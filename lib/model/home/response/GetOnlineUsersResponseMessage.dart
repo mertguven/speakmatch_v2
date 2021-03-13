@@ -6,7 +6,7 @@ class GetOnlineUsersResponseMessage {
 
   GetOnlineUsersResponseMessage.fromJson(Map<String, dynamic> json) {
     if (json['Online Users'] != null) {
-      onlineUsers = new List<OnlineUsers>();
+      onlineUsers = <OnlineUsers>[];
       json['Online Users'].forEach((v) {
         onlineUsers.add(new OnlineUsers.fromJson(v));
       });

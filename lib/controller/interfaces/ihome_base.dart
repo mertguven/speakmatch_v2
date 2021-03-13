@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:speakmatch_v2/model/home/request/UserStatusChangeRequestMessage.dart';
 import 'package:speakmatch_v2/model/home/response/GetOnlineUsersResponseMessage.dart';
 import 'package:speakmatch_v2/model/home/response/UserStatusChangeResponseMessage.dart';

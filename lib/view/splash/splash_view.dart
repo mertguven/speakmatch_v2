@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:speakmatch_v2/core/components/logo.dart';
 import 'package:speakmatch_v2/shared-prefs.dart';
 import 'package:speakmatch_v2/view/main/main_view.dart';
