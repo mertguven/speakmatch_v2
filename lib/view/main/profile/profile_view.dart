@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:speakmatch_v2/controller/home/home_controller.dart';
 import 'package:speakmatch_v2/controller/profile/profile_controller.dart';
+import 'package:speakmatch_v2/model/home/request/UserStatusChangeRequestMessage.dart';
 import 'package:speakmatch_v2/model/profile/response/GetUserInformationResponseMessage.dart';
 import 'package:speakmatch_v2/shared-prefs.dart';
 import 'package:speakmatch_v2/view/main/profile/big_profile_picture.dart';
@@ -317,14 +319,7 @@ class _ProfileViewState extends State<ProfileView> {
                 style: ElevatedButton.styleFrom(
                   primary: Colors.red,
                 ),
-                onPressed: () {
-                  SharedPrefs.sharedClear();
-                  Navigator.pushAndRemoveUntil(
-                      context,
-                      CupertinoPageRoute(
-                          builder: (context) => LoginAndRegisterView()),
-                      (_) => false);
-                },
+                onPressed: () => logOutEvent(),
                 child: Text("Evet"),
               ),
               ElevatedButton(
@@ -408,5 +403,17 @@ class _ProfileViewState extends State<ProfileView> {
         counter++;
       });
     }
+  }
+
+  logOutEvent() async {
+    var homeController = Provider.of<HomeController>(context, listen: false);
+    UserStatusChangeRequestMessage request =
+        UserStatusChangeRequestMessage(status: "Offline");
+    await homeController.changeUserStatus(request);
+    SharedPrefs.sharedClear();
+    Navigator.pushAndRemoveUntil(
+        context,
+        CupertinoPageRoute(builder: (context) => LoginAndRegisterView()),
+        (_) => false);
   }
 }

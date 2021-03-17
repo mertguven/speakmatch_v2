@@ -2,10 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:speakmatch_v2/controller/home/home_controller.dart';
 import 'package:speakmatch_v2/core/components/gradient_text.dart';
 import 'package:speakmatch_v2/model/home/request/UserStatusChangeRequestMessage.dart';
+import 'package:speakmatch_v2/view/main/home/call/calling_view.dart';
 import 'package:speakmatch_v2/view/main/home/notification_view.dart';
 import 'package:speakmatch_v2/view/main/pricing/pricing_view.dart';
 
@@ -34,19 +36,19 @@ class _HomeViewState extends State<HomeView> {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            stops: [0.1, 0.8],
+            stops: [0.1, 0.9],
             colors: [
+              Color(0xFFD64565),
               Color(0xffe08791),
-              Color(0xFFE4B3B9),
             ],
           ),
         ),
         child: Column(
           children: [
             Expanded(flex: 2, child: topInformationContainer()),
-            Expanded(flex: 5, child: callButton()),
+            Expanded(flex: 4, child: callButton()),
             Expanded(
-                flex: 3, child: bottomSettingsAndPremiumContainer(context)),
+                flex: 2, child: bottomSettingsAndPremiumContainer(context)),
           ],
         ),
       );
@@ -95,6 +97,13 @@ class _HomeViewState extends State<HomeView> {
         width: double.infinity,
         margin: EdgeInsets.symmetric(horizontal: 20),
         decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.white.withOpacity(0.8),
+              blurRadius: 5,
+              offset: Offset(0, -3),
+            ),
+          ],
           color: Colors.white,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(50),
@@ -104,6 +113,7 @@ class _HomeViewState extends State<HomeView> {
         child: Column(
           children: [
             Expanded(
+              flex: 3,
               child: Container(
                 width: double.infinity,
                 margin: EdgeInsets.symmetric(vertical: 10),
@@ -184,6 +194,7 @@ class _HomeViewState extends State<HomeView> {
               color: Colors.grey.shade100,
             ),
             Expanded(
+              flex: 2,
               child: GestureDetector(
                 onTap: () => Navigator.push(
                     context,
@@ -214,35 +225,11 @@ class _HomeViewState extends State<HomeView> {
         ),
       );
 
-  Stack callButton() => Stack(
-        alignment: Alignment.center,
-        children: [
-          CircleAvatar(
-            radius: 140,
-            backgroundColor: Color(0xFFE4B3B9).withOpacity(0.4),
-          ),
-          CircleAvatar(
-            radius: 110,
-            backgroundColor: Color(0xFFE4B3B9).withOpacity(0.6),
-          ),
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                numberOfNotification++;
-              });
-              _changeTheStatus();
-            },
-            child: CircleAvatar(
-              maxRadius: 80,
-              backgroundColor: Color(0xFFEC7D8A),
-              child: Icon(
-                FontAwesomeIcons.phone,
-                size: 50,
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ],
+  GestureDetector callButton() => GestureDetector(
+        onTap: () {
+          _changeTheStatus();
+        },
+        child: Lottie.asset("assets/animations/call.json"),
       );
 
   Container topInformationContainer() => Container(
@@ -271,9 +258,9 @@ class _HomeViewState extends State<HomeView> {
     UserStatusChangeRequestMessage request =
         UserStatusChangeRequestMessage(status: "Online");
     var response = await homeController.changeUserStatus(request);
-    //var response = await homeController.getOnlineUsers();
     if (response.success) {
-      print(response.success.toString());
+      Navigator.push(context,
+          PageTransition(child: CallingView(), type: PageTransitionType.fade));
     }
   }
 }

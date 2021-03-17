@@ -1,4 +1,5 @@
 import 'package:speakmatch_v2/controller/interfaces/ihome_base.dart';
+import 'package:speakmatch_v2/model/home/call/response/SelectOnlineUserResponseMessage.dart';
 import 'package:speakmatch_v2/model/home/request/UserStatusChangeRequestMessage.dart';
 import 'package:speakmatch_v2/model/home/response/GetOnlineUsersResponseMessage.dart';
 import 'package:speakmatch_v2/model/home/response/UserStatusChangeResponseMessage.dart';
@@ -25,5 +26,13 @@ class HomeController extends IHomeBase {
     var getOnlineUsersResponseMessage =
         GetOnlineUsersResponseMessage.fromJson(item);
     return getOnlineUsersResponseMessage;
+  }
+
+  @override
+  Future<SelectOnlineUserResponseMessage> selectOnlineUser() async {
+    final item = await _webService.sendRequestWithGet("SelectOnlineUser");
+    var selectOnlineUserResponseMessage =
+        SelectOnlineUserResponseMessage.fromJson(item);
+    return selectOnlineUserResponseMessage;
   }
 }

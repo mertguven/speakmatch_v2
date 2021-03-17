@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:speakmatch_v2/controller/home/home_controller.dart';
 import 'package:speakmatch_v2/controller/signin-signup/auth_controller.dart';
 import 'package:get/get.dart';
+import 'package:speakmatch_v2/model/home/request/UserStatusChangeRequestMessage.dart';
 import 'package:speakmatch_v2/model/signin_signup/request/LoginRequestMessage.dart';
 import 'package:speakmatch_v2/model/signin_signup/request/RegisterRequestMessage.dart';
 import 'package:speakmatch_v2/view/main/main_view.dart';
@@ -171,10 +173,14 @@ class _UsernamePasswordButtonState extends State<UsernamePasswordButton>
           Provider.of<AuthController>(context, listen: false);
 
       if (whichProcess == "login") {
+         var homeController = Provider.of<HomeController>(context, listen: false);
         LoginRequestMessage requestMessage =
             LoginRequestMessage(username: userName, password: password);
         var responseMessage = await authController.signIn(requestMessage);
         if (responseMessage.success) {
+          UserStatusChangeRequestMessage request =
+        UserStatusChangeRequestMessage(status: "Idle");
+        await homeController.changeUserStatus(request);
           Navigator.pushAndRemoveUntil(
               context,
               CupertinoPageRoute(builder: (context) => MainView()),

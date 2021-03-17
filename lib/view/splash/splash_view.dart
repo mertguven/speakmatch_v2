@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:speakmatch_v2/controller/home/home_controller.dart';
 import 'package:speakmatch_v2/core/components/logo.dart';
+import 'package:speakmatch_v2/model/home/request/UserStatusChangeRequestMessage.dart';
 import 'package:speakmatch_v2/shared-prefs.dart';
 import 'package:speakmatch_v2/view/main/main_view.dart';
 import 'package:speakmatch_v2/view/signin_signup/login_and_register_view.dart';
@@ -74,8 +77,12 @@ class _SplashScreenState extends State<SplashScreen>
       );
 
   Future pageRotate() async {
+    var homeController = Provider.of<HomeController>(context, listen: false);
     if (SharedPrefs.getLogin) {
       print("user token: " + SharedPrefs.getToken);
+      UserStatusChangeRequestMessage request =
+        UserStatusChangeRequestMessage(status: "Idle");
+      await homeController.changeUserStatus(request);
       waiting(MainView());
     } else {
       waiting(LoginAndRegisterView());
