@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:speakmatch_v2/controller/home/home_controller.dart';
 import 'package:speakmatch_v2/core/components/gradient_text.dart';
@@ -255,12 +256,23 @@ class _HomeViewState extends State<HomeView> {
 
   Future<void> _changeTheStatus() async {
     var homeController = Provider.of<HomeController>(context, listen: false);
-    UserStatusChangeRequestMessage request =
-        UserStatusChangeRequestMessage(status: "Online");
-    var response = await homeController.changeUserStatus(request);
-    if (response.success) {
-      Navigator.push(context,
-          PageTransition(child: CallingView(), type: PageTransitionType.fade));
+    var permissionStatus = await _handleMic(Permission.microphone);
+    if (permissionStatus.isGranted) {
+      UserStatusChangeRequestMessage request =
+          UserStatusChangeRequestMessage(status: "Online");
+      var response = await homeController.changeUserStatus(request);
+      if (response.success) {
+        Navigator.push(
+            context,
+            PageTransition(
+                child: CallingView(), type: PageTransitionType.fade));
+      }
     }
+  }
+
+  Future<PermissionStatus> _handleMic(Permission permission) async {
+    final status = await permission.request();
+    print(status);
+    return status;
   }
 }

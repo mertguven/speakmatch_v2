@@ -16,7 +16,6 @@ class _CallingViewState extends State<CallingView>
   AnimationController _controller;
   @override
   void dispose() {
-    _controller.dispose();
     super.dispose();
   }
 
@@ -76,7 +75,6 @@ class _CallingViewState extends State<CallingView>
         });
       _controller.forward();
     } else {
-      print("buraya girdi aga");
       Navigator.pushAndRemoveUntil(
           context,
           PageTransition(

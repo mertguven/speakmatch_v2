@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:provider/provider.dart';
+import 'package:speakmatch_v2/controller/home/home_controller.dart';
 import 'package:speakmatch_v2/model/home/call/response/SelectOnlineUserResponseMessage.dart';
-import 'package:speakmatch_v2/view/main/home/call/meeting_view.dart';
+import 'package:speakmatch_v2/view/main/home/call/voice_call_view.dart';
 import 'package:speakmatch_v2/view/main/main_view.dart';
 
 class ConnectingView extends StatefulWidget {
@@ -26,19 +28,7 @@ class _ConnectingViewState extends State<ConnectingView>
   @override
   void initState() {
     super.initState();
-    _controller =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 2500))
-          ..addStatusListener((status) {
-            if (status == AnimationStatus.completed) {
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  PageTransition(
-                      child: MeetingView(response: widget.response),
-                      type: PageTransitionType.fade),
-                  (route) => false);
-            }
-          });
-    _controller.forward();
+    _generateAgoraTokenAndAnimationController();
   }
 
   @override
@@ -98,4 +88,25 @@ class _ConnectingViewState extends State<ConnectingView>
       context,
       PageTransition(child: MainView(), type: PageTransitionType.leftToRight),
       (route) => false);
+
+  _generateAgoraTokenAndAnimationController() async {
+    var homeController = Provider.of<HomeController>(context, listen: false);
+    var response = await homeController.generateAgoraToken();
+    if (response.success) {
+      _controller = AnimationController(
+          vsync: this, duration: Duration(milliseconds: 2500))
+        ..addStatusListener((status) {
+          if (status == AnimationStatus.completed) {
+            Navigator.pushAndRemoveUntil(
+                context,
+                PageTransition(
+                    child: VoiceCallView(
+                        response: widget.response, token: response.token),
+                    type: PageTransitionType.fade),
+                (route) => false);
+          }
+        });
+      _controller.forward();
+    }
+  }
 }

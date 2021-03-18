@@ -1,4 +1,5 @@
 import 'package:speakmatch_v2/controller/interfaces/ihome_base.dart';
+import 'package:speakmatch_v2/model/home/call/response/GenerateAgoraTokenResponseMessage.dart';
 import 'package:speakmatch_v2/model/home/call/response/SelectOnlineUserResponseMessage.dart';
 import 'package:speakmatch_v2/model/home/request/UserStatusChangeRequestMessage.dart';
 import 'package:speakmatch_v2/model/home/response/GetOnlineUsersResponseMessage.dart';
@@ -34,5 +35,14 @@ class HomeController extends IHomeBase {
     var selectOnlineUserResponseMessage =
         SelectOnlineUserResponseMessage.fromJson(item);
     return selectOnlineUserResponseMessage;
+  }
+
+  @override
+  Future<GenerateAgoraTokenResponseMessage> generateAgoraToken() async {
+    final item = await _webService.sendRequestWithPostAndToken(
+        "GenerateAgoraToken", _requestBody);
+    var generateAgoraTokenResponseMessage =
+        GenerateAgoraTokenResponseMessage.fromJson(item);
+    return generateAgoraTokenResponseMessage;
   }
 }

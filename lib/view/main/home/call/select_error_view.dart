@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:speakmatch_v2/view/main/home/home_view.dart';
 import 'package:speakmatch_v2/view/main/main_view.dart';
 
 class SelectErrorView extends StatefulWidget {
@@ -10,6 +9,12 @@ class SelectErrorView extends StatefulWidget {
 }
 
 class _SelectErrorViewState extends State<SelectErrorView> {
+  AnimationController controller;
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -25,7 +30,10 @@ class _SelectErrorViewState extends State<SelectErrorView> {
               Spacer(flex: 3),
               FractionallySizedBox(
                   widthFactor: 0.7,
-                  child: Lottie.asset("assets/animations/404.json")),
+                  child: Lottie.asset(
+                    "assets/animations/404.json",
+                    controller: controller,
+                  )),
               Spacer(),
               Text(
                 "Şu an tüm kullanıcılar meşgul",
@@ -50,7 +58,7 @@ class _SelectErrorViewState extends State<SelectErrorView> {
                   onPressed: () => Navigator.pushAndRemoveUntil(
                       context,
                       PageTransition(
-                          child: HomeView(),
+                          child: MainView(),
                           type: PageTransitionType.leftToRight),
                       (route) => false),
                 ),
