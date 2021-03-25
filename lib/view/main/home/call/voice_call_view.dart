@@ -4,8 +4,12 @@ import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:screen/screen.dart';
+import 'package:speakmatch_v2/controller/home/home_controller.dart';
 import 'package:speakmatch_v2/model/home/call/response/SelectOnlineUserResponseMessage.dart';
+import 'package:speakmatch_v2/model/home/request/UserStatusChangeRequestMessage.dart';
 import 'package:speakmatch_v2/utilities/settings.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:flutter_countdown_timer/countdown_timer_controller.dart';
@@ -259,6 +263,7 @@ class _VoiceCallViewState extends State<VoiceCallView> {
     super.initState();
     controller = CountdownTimerController(endTime: endTime);
     Screen.keepOn(true);
+    print(widget.token);
     initialize();
   }
 
@@ -275,7 +280,7 @@ class _VoiceCallViewState extends State<VoiceCallView> {
 
     await _initAgoraRtcEngine();
     _addAgoraEventHandlers();
-    await _engine.joinChannel(widget.token, "oda", null, 0);
+    await _engine.joinChannel(widget.token, "pUWVRYAEouEPNnTz", null, 0);
   }
 
   Future<void> _initAgoraRtcEngine() async {
@@ -283,6 +288,24 @@ class _VoiceCallViewState extends State<VoiceCallView> {
     await _engine.enableAudio();
     await _engine.setChannelProfile(ChannelProfile.LiveBroadcasting);
     await _engine.setClientRole(widget.role);
+  }
+
+  _snackbar(bool success, String content) {
+    Get.snackbar(null, null,
+        margin: EdgeInsets.all(15),
+        duration: Duration(seconds: 5),
+        borderRadius: 7,
+        messageText: Text(
+          content,
+          style: TextStyle(color: Colors.white, fontSize: 14),
+        ),
+        icon: Icon(
+          success ? Icons.done : Icons.info,
+          size: 28.0,
+          color: Colors.white,
+        ),
+        backgroundColor: success ? Colors.lightGreen : Color(0xffD64565),
+        snackPosition: SnackPosition.TOP);
   }
 
   // Initialize the app
@@ -300,13 +323,13 @@ class _VoiceCallViewState extends State<VoiceCallView> {
     _engine.setEventHandler(RtcEngineEventHandler(error: (code) {
       setState(() {
         final info = 'Lütfen kanala tekrar katılın!';
-        //_snackbar(info, Colors.red);
+        _snackbar(false, code.toString());
         _infoStrings.add(info);
       });
     }, joinChannelSuccess: (channel, uid, elapsed) {
       setState(() {
         final info = 'Kanala katıldın.';
-        //_snackbar(info, Colors.green);
+        _snackbar(true, info);
         _infoStrings.add(info);
       });
       Future.delayed(
@@ -324,7 +347,7 @@ class _VoiceCallViewState extends State<VoiceCallView> {
     }, userJoined: (uid, elapsed) {
       setState(() {
         final info = '${widget.response.username} giriş yaptı.';
-        //_snackbar(info, Colors.green);
+        _snackbar(true, info);
         _infoStrings.add(info);
         _users.add(uid);
         isConsultantOnline = true;
@@ -334,7 +357,11 @@ class _VoiceCallViewState extends State<VoiceCallView> {
     }));
   }
 
-  void _onCallEnd(BuildContext context) {
+  void _onCallEnd(BuildContext context) async {
+    var homeController = Provider.of<HomeController>(context, listen: false);
+    UserStatusChangeRequestMessage request =
+        UserStatusChangeRequestMessage(status: "Idle");
+    var response = await homeController.changeUserStatus(request);
     Navigator.pushAndRemoveUntil(
       context,
       CupertinoPageRoute(
@@ -365,15 +392,7 @@ class _VoiceCallViewState extends State<VoiceCallView> {
                 child: CountdownTimer(
                   controller: controller,
                   widgetBuilder: (context, currentRemainingTime) {
-                    if (currentRemainingTime.min == 5 &&
-                        currentRemainingTime.sec == 00) {
-                      Future.delayed(Duration(seconds: 1),
-                          () => fillInfoString(_infoStrings));
-                      return Text(
-                        "${currentRemainingTime.min == null ? 00 : currentRemainingTime.min}:${currentRemainingTime.sec}",
-                        style: customTextStyle(),
-                      );
-                    } else if (currentRemainingTime.min == 4 &&
+                    if (currentRemainingTime.min == 4 &&
                         currentRemainingTime.sec == 53) {
                       Future.delayed(Duration(seconds: 1),
                           () => deleteInfoString(_infoStrings));
@@ -422,36 +441,11 @@ class _VoiceCallViewState extends State<VoiceCallView> {
     );
   }
 
-  void fillInfoString(List<String> infoStrings) {
-    setState(() {
-      //_snackbar("Son 5 dakika kaldı!", Colors.red);
-      _infoStrings.add("Son 5 dakika kaldı!");
-    });
-  }
-
   deleteInfoString(List<String> infoStrings) {
     setState(() {
       _infoStrings.clear();
     });
   }
-
-  /* Widget _snackbar(String message, MaterialColor color) {
-    return Flushbar(
-      message: message,
-      margin: EdgeInsets.only(left: 15, right: 15, top: 50),
-      flushbarPosition: FlushbarPosition.TOP,
-      backgroundColor: color,
-      icon: Icon(
-        color == Colors.red
-            ? Icons.report_gmailerrorred_outlined
-            : Icons.subdirectory_arrow_right_rounded,
-        size: 28.0,
-        color: Colors.white,
-      ),
-      flushbarStyle: FlushbarStyle.FLOATING,
-      duration: Duration(seconds: 3),
-    )..show(scaffoldKey.currentState.context);
-  }*/
 
   TextStyle customTextStyle() {
     return TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 20);

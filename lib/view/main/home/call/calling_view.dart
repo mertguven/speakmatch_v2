@@ -3,6 +3,7 @@ import 'package:lottie/lottie.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:speakmatch_v2/controller/home/home_controller.dart';
+import 'package:speakmatch_v2/model/home/request/UserStatusChangeRequestMessage.dart';
 import 'package:speakmatch_v2/view/main/home/call/connecting_view.dart';
 import 'package:speakmatch_v2/view/main/home/call/select_error_view.dart';
 
@@ -75,11 +76,18 @@ class _CallingViewState extends State<CallingView>
         });
       _controller.forward();
     } else {
-      Navigator.pushAndRemoveUntil(
-          context,
-          PageTransition(
-              child: SelectErrorView(), type: PageTransitionType.fade),
-          (route) => false);
+      _selectError();
     }
+  }
+
+  void _selectError() async {
+    var homeController = Provider.of<HomeController>(context, listen: false);
+    UserStatusChangeRequestMessage request =
+        UserStatusChangeRequestMessage(status: "Idle");
+    var response = await homeController.changeUserStatus(request);
+    Navigator.pushAndRemoveUntil(
+        context,
+        PageTransition(child: SelectErrorView(), type: PageTransitionType.fade),
+        (route) => false);
   }
 }
