@@ -94,7 +94,7 @@ class _ConnectingViewState extends State<ConnectingView>
     var response = await homeController.generateAgoraToken();
     if (response.success) {
       _controller = AnimationController(
-          vsync: this, duration: Duration(milliseconds: 2500))
+          vsync: this, duration: Duration(milliseconds: 2000))
         ..addStatusListener((status) {
           if (status == AnimationStatus.completed) {
             Navigator.pushAndRemoveUntil(

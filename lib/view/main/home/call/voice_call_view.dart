@@ -247,7 +247,6 @@ class _VoiceCallViewState extends State<VoiceCallView> {
   void dispose() {
     // clear users
     _users.clear();
-    controller.dispose();
     // destroy sdk
     _engine.leaveChannel();
     _engine.destroy();
@@ -276,7 +275,7 @@ class _VoiceCallViewState extends State<VoiceCallView> {
 
     await _initAgoraRtcEngine();
     _addAgoraEventHandlers();
-    await _engine.joinChannel(widget.token, "oda2", null, 0);
+    await _engine.joinChannel(widget.token, "oda", null, 0);
   }
 
   Future<void> _initAgoraRtcEngine() async {
