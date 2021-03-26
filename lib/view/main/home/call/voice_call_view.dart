@@ -13,7 +13,6 @@ import 'package:speakmatch_v2/model/home/request/UserStatusChangeRequestMessage.
 import 'package:speakmatch_v2/utilities/settings.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:flutter_countdown_timer/countdown_timer_controller.dart';
-import 'package:speakmatch_v2/view/main/home/call/call_end_view.dart';
 import 'package:speakmatch_v2/view/main/main_view.dart';
 
 /*class VoiceCallView extends StatefulWidget {
@@ -361,7 +360,7 @@ class _VoiceCallViewState extends State<VoiceCallView> {
     var homeController = Provider.of<HomeController>(context, listen: false);
     UserStatusChangeRequestMessage request =
         UserStatusChangeRequestMessage(status: "Idle");
-    var response = await homeController.changeUserStatus(request);
+    await homeController.changeUserStatus(request);
     Navigator.pushAndRemoveUntil(
       context,
       CupertinoPageRoute(
@@ -442,9 +441,7 @@ class _VoiceCallViewState extends State<VoiceCallView> {
   }
 
   deleteInfoString(List<String> infoStrings) {
-    setState(() {
-      _infoStrings.clear();
-    });
+    _infoStrings.clear();
   }
 
   TextStyle customTextStyle() {
