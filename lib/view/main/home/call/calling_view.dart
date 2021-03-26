@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:speakmatch_v2/controller/home/home_controller.dart';
+import 'package:speakmatch_v2/model/home/call/response/SelectOnlineUserResponseMessage.dart';
 import 'package:speakmatch_v2/model/home/request/UserStatusChangeRequestMessage.dart';
 import 'package:speakmatch_v2/view/main/home/call/connecting_view.dart';
 import 'package:speakmatch_v2/view/main/home/call/select_error_view.dart';
@@ -15,6 +18,7 @@ class CallingView extends StatefulWidget {
 class _CallingViewState extends State<CallingView>
     with TickerProviderStateMixin {
   AnimationController _controller;
+  StreamController<SelectOnlineUserResponseMessage> _streamController;
   @override
   void dispose() {
     super.dispose();
@@ -23,6 +27,7 @@ class _CallingViewState extends State<CallingView>
   @override
   void initState() {
     super.initState();
+    _streamController = new StreamController();
     _searchOnlineUser();
   }
 
@@ -41,7 +46,24 @@ class _CallingViewState extends State<CallingView>
             ],
           ),
         ),
-        child: Column(
+        child: StreamBuilder<SelectOnlineUserResponseMessage>(
+          stream: _streamController.stream,
+          builder: (context, snapshot) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Lottie.asset("assets/animations/calling.json"),
+                Text(
+                  "Aranıyor...",
+                  style: TextStyle(
+                      color: Theme.of(context).accentColor,
+                      fontSize: 25,
+                      fontWeight: FontWeight.w500),
+                ),
+              ],
+            );
+          },
+        ), /*Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Lottie.asset("assets/animations/calling.json"),
@@ -53,7 +75,7 @@ class _CallingViewState extends State<CallingView>
                   fontWeight: FontWeight.w500),
             ),
           ],
-        ),
+        ),*/
       ),
     );
   }
@@ -61,6 +83,7 @@ class _CallingViewState extends State<CallingView>
   void _searchOnlineUser() async {
     var homeController = Provider.of<HomeController>(context, listen: false);
     var response = await homeController.selectOnlineUser();
+    _streamController.add(response);
     if (response.success) {
       _controller = AnimationController(
           vsync: this, duration: Duration(milliseconds: 2000))
@@ -84,7 +107,7 @@ class _CallingViewState extends State<CallingView>
     var homeController = Provider.of<HomeController>(context, listen: false);
     UserStatusChangeRequestMessage request =
         UserStatusChangeRequestMessage(status: "Idle");
-    var response = await homeController.changeUserStatus(request);
+    await homeController.changeUserStatus(request);
     Navigator.pushAndRemoveUntil(
         context,
         PageTransition(child: SelectErrorView(), type: PageTransitionType.fade),
