@@ -15,20 +15,18 @@ class CallingView extends StatefulWidget {
   _CallingViewState createState() => _CallingViewState();
 }
 
-class _CallingViewState extends State<CallingView>
-    with TickerProviderStateMixin {
-  AnimationController _controller;
-  StreamController<SelectOnlineUserResponseMessage> _streamController;
-  @override
-  void dispose() {
-    super.dispose();
-  }
+class _CallingViewState extends State<CallingView> {
+  StreamController<SelectOnlineUserResponseMessage> streamController =
+      StreamController<SelectOnlineUserResponseMessage>();
+  StreamSubscription<SelectOnlineUserResponseMessage> streamSubscription;
+  Stream stream;
+  int searchCounter = 0;
 
   @override
   void initState() {
     super.initState();
-    _streamController = new StreamController();
-    _searchOnlineUser();
+    stream = streamController.stream;
+    searchOnlineUser();
   }
 
   @override
@@ -46,24 +44,7 @@ class _CallingViewState extends State<CallingView>
             ],
           ),
         ),
-        child: StreamBuilder<SelectOnlineUserResponseMessage>(
-          stream: _streamController.stream,
-          builder: (context, snapshot) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Lottie.asset("assets/animations/calling.json"),
-                Text(
-                  "Aranıyor...",
-                  style: TextStyle(
-                      color: Theme.of(context).accentColor,
-                      fontSize: 25,
-                      fontWeight: FontWeight.w500),
-                ),
-              ],
-            );
-          },
-        ), /*Column(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Lottie.asset("assets/animations/calling.json"),
@@ -75,39 +56,46 @@ class _CallingViewState extends State<CallingView>
                   fontWeight: FontWeight.w500),
             ),
           ],
-        ),*/
+        ),
       ),
     );
   }
 
-  void _searchOnlineUser() async {
+  searchOnlineUser() async {
     var homeController = Provider.of<HomeController>(context, listen: false);
-    var response = await homeController.selectOnlineUser();
-    _streamController.add(response);
-    if (response.success) {
-      _controller = AnimationController(
-          vsync: this, duration: Duration(milliseconds: 2000))
-        ..addStatusListener((status) {
-          if (status == AnimationStatus.completed) {
-            Navigator.pushAndRemoveUntil(
-                context,
-                PageTransition(
-                    child: ConnectingView(response: response),
-                    type: PageTransitionType.fade),
-                (route) => false);
-          }
+
+    while (true) {
+      var response = await homeController.selectOnlineUser();
+      if (response.success) {
+        streamController.add(response);
+        streamSubscription = stream.listen((value) async {
+          streamSubscription?.cancel();
+          Navigator.pushAndRemoveUntil(
+              context,
+              PageTransition(
+                  child: ConnectingView(response: value),
+                  type: PageTransitionType.fade),
+              (route) => false);
         });
-      _controller.forward();
-    } else {
-      _selectError();
+        break;
+      } else {
+        if (searchCounter > 10) {
+          selectError();
+          break;
+        } else {
+          searchCounter++;
+        }
+        Future.delayed(Duration(seconds: 1));
+      }
     }
   }
 
-  void _selectError() async {
+  selectError() async {
     var homeController = Provider.of<HomeController>(context, listen: false);
     UserStatusChangeRequestMessage request =
         UserStatusChangeRequestMessage(status: "Idle");
     await homeController.changeUserStatus(request);
+    streamSubscription?.cancel();
     Navigator.pushAndRemoveUntil(
         context,
         PageTransition(child: SelectErrorView(), type: PageTransitionType.fade),
