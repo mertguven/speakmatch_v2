@@ -67,18 +67,21 @@ class _CallingViewState extends State<CallingView> {
     while (true) {
       var response = await homeController.selectOnlineUser();
       if (response.success) {
-        streamController.add(response);
-        streamSubscription = stream.listen((value) async {
-          streamSubscription?.cancel();
-          Navigator.pushAndRemoveUntil(
-              context,
-              PageTransition(
-                  child: ConnectingView(response: value),
-                  type: PageTransitionType.fade),
-              (route) => false);
-        });
-        break;
-      } else {
+        if (response.status == "Matching" || response.status == "Online") {
+          streamController.add(response);
+          streamSubscription = stream.listen((value) async {
+            streamSubscription?.cancel();
+            Navigator.pushAndRemoveUntil(
+                context,
+                PageTransition(
+                    child: ConnectingView(response: value),
+                    type: PageTransitionType.fade),
+                (route) => false);
+          });
+          break;
+        }
+      }
+      /*else {
         if (searchCounter > 10) {
           selectError();
           break;
@@ -86,7 +89,7 @@ class _CallingViewState extends State<CallingView> {
           searchCounter++;
         }
         Future.delayed(Duration(seconds: 1));
-      }
+      }*/
     }
   }
 

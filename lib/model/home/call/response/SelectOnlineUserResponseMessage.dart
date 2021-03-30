@@ -1,6 +1,7 @@
 class SelectOnlineUserResponseMessage {
   bool success;
   String messages;
+  String roomNo;
   String id;
   String username;
   String status;
@@ -12,6 +13,7 @@ class SelectOnlineUserResponseMessage {
   SelectOnlineUserResponseMessage(
       {this.success,
       this.messages,
+      this.roomNo,
       this.id,
       this.username,
       this.status,
@@ -22,6 +24,7 @@ class SelectOnlineUserResponseMessage {
 
   SelectOnlineUserResponseMessage.fromJson(Map<String, dynamic> json) {
     success = json['Success'];
+    roomNo = json['room_no'];
     messages = json['Messages'];
     id = json['id'];
     username = json['username'];
@@ -35,6 +38,7 @@ class SelectOnlineUserResponseMessage {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['Success'] = this.success;
+    data['room_no'] = this.roomNo;
     data['Messages'] = this.messages;
     data['id'] = this.id;
     data['username'] = this.username;
