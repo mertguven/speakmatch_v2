@@ -260,6 +260,7 @@ class _VoiceCallViewState extends State<VoiceCallView> {
   @override
   void initState() {
     super.initState();
+    changeStatus();
     controller = CountdownTimerController(endTime: endTime);
     Screen.keepOn(true);
     print(widget.token);
@@ -578,5 +579,12 @@ class _VoiceCallViewState extends State<VoiceCallView> {
         ],
       ),
     ));
+  }
+
+  changeStatus() async {
+    var homeController = Provider.of<HomeController>(context, listen: false);
+    UserStatusChangeRequestMessage request =
+        UserStatusChangeRequestMessage(status: "Busy");
+    await homeController.changeUserStatus(request);
   }
 }

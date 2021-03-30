@@ -66,6 +66,7 @@ class _CallingViewState extends State<CallingView> {
 
     while (true) {
       var response = await homeController.selectOnlineUser();
+      print(response.status);
       if (response.success) {
         if (response.status == "Matching" || response.status == "Online") {
           streamController.add(response);
