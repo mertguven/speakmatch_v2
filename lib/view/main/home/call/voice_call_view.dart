@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:ui';
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:screen/screen.dart';
@@ -11,220 +13,9 @@ import 'package:speakmatch_v2/controller/home/home_controller.dart';
 import 'package:speakmatch_v2/model/home/call/response/SelectOnlineUserResponseMessage.dart';
 import 'package:speakmatch_v2/model/home/request/UserStatusChangeRequestMessage.dart';
 import 'package:speakmatch_v2/utilities/settings.dart';
-import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
-import 'package:flutter_countdown_timer/countdown_timer_controller.dart';
-import 'package:speakmatch_v2/view/main/main_view.dart';
+import 'package:speakmatch_v2/view/main/home/call/call_end_view.dart';
+import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 
-/*class VoiceCallView extends StatefulWidget {
-  final ClientRole role = ClientRole.Broadcaster;
-  final String token;
-  final SelectOnlineUserResponseMessage response;
-
-  const VoiceCallView({Key key, this.token, this.response}) : super(key: key);
-
-  @override
-  _VoiceCallViewState createState() => _VoiceCallViewState();
-}
-
-class _VoiceCallViewState extends State<VoiceCallView> {
-  bool muted = false;
-  final _users = <int>[];
-  RtcEngine _engine;
-  CountdownTimerController controller;
-  bool isConsultantOnline = false;
-
-  @override
-  void dispose() {
-    // clear users
-    _users.clear();
-    // destroy sdk
-    _engine.leaveChannel();
-    _engine.destroy();
-    controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    controller = CountdownTimerController(endTime: 60000);
-    Screen.keepOn(true);
-    initialize();
-  }
-
-  Future<void> initialize() async {
-    await _initAgoraRtcEngine();
-    _engine.setEventHandler(RtcEngineEventHandler());
-    await _engine.joinChannel(widget.token, "oda2", null, 0);
-  }
-
-  Future<void> _initAgoraRtcEngine() async {
-    _engine = await RtcEngine.create(APP_ID);
-    await _engine.enableAudio();
-    await _engine.setChannelProfile(ChannelProfile.LiveBroadcasting);
-    await _engine.setClientRole(widget.role);
-  }
-
-  void _onCallEnd(BuildContext context) {
-    Navigator.pop(context);
-  }
-
-  Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        _onCallEnd(context);
-        return true;
-      },
-      child: Scaffold(
-        /*appBar: AppBar(
-          actions: [
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.only(right: 10),
-                child: CountdownTimer(
-                  controller: controller,
-                  widgetBuilder: (context, currentRemainingTime) {
-                    if (currentRemainingTime.min == 5 &&
-                        currentRemainingTime.sec == 00) {
-                      Future.delayed(Duration(seconds: 1),
-                          () => fillInfoString(_infoStrings));
-                      return Text(
-                        "${currentRemainingTime.min == null ? 00 : currentRemainingTime.min}:${currentRemainingTime.sec}",
-                        style: customTextStyle(),
-                      );
-                    } else if (currentRemainingTime.min == 4 &&
-                        currentRemainingTime.sec == 53) {
-                      Future.delayed(Duration(seconds: 1),
-                          () => deleteInfoString(_infoStrings));
-                      return Text(
-                        "${currentRemainingTime.min == null ? 00 : currentRemainingTime.min}:${currentRemainingTime.sec}",
-                        style: customTextStyle(),
-                      );
-                    } else if (currentRemainingTime.sec == 1 &&
-                        currentRemainingTime.min == null) {
-                      Future.delayed(
-                          Duration(milliseconds: 500),
-                          () => Navigator.pushAndRemoveUntil(
-                                context,
-                                CupertinoPageRoute(
-                                  builder: (context) => SessionCompletePage(),
-                                ),
-                                (_) => false,
-                              ));
-
-                      return Text(
-                        "${currentRemainingTime.min == null ? 00 : currentRemainingTime.min}:${currentRemainingTime.sec == null ? 00 : currentRemainingTime.sec}",
-                        style: customTextStyle(),
-                      );
-                    } else {
-                      return Text(
-                        "${currentRemainingTime.min == null ? 00 : currentRemainingTime.min}:${currentRemainingTime.sec == null ? 00 : currentRemainingTime.sec}",
-                        style: customTextStyle(),
-                      );
-                    }
-                  },
-                ),
-              ),
-            )
-          ],
-        ),*/
-        backgroundColor: Colors.white,
-        body: Center(
-          child: Stack(
-            children: <Widget>[
-              CountdownTimer(
-                controller: controller,
-                widgetBuilder: (context, currentRemainingTime) {
-                  if (currentRemainingTime.sec == 1) {
-                    Future.delayed(
-                        Duration(milliseconds: 500),
-                        () => Navigator.pushAndRemoveUntil(
-                              context,
-                              CupertinoPageRoute(
-                                builder: (context) => CallEndView(),
-                              ),
-                              (_) => false,
-                            ));
-
-                    return Text(
-                      "${currentRemainingTime.sec == null ? 00 : currentRemainingTime.sec}",
-                      style: customTextStyle(),
-                    );
-                  } else {
-                    return Text(
-                      "${currentRemainingTime.sec == null ? 00 : currentRemainingTime.sec}",
-                      style: customTextStyle(),
-                    );
-                  }
-                },
-              ),
-              _toolbar(),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  TextStyle customTextStyle() {
-    return TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 20);
-  }
-
-  Widget _toolbar() {
-    if (widget.role == ClientRole.Audience) return Container();
-    return Container(
-      alignment: Alignment.bottomCenter,
-      padding: const EdgeInsets.symmetric(vertical: 48),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          RawMaterialButton(
-            onPressed: _onToggleMute,
-            child: Icon(
-              muted ? Icons.mic_off : Icons.mic,
-              color: muted ? Colors.white : Colors.blueAccent,
-              size: 35.0,
-            ),
-            shape: CircleBorder(),
-            elevation: 2.0,
-            fillColor: muted ? Colors.blueAccent : Colors.white,
-            padding: const EdgeInsets.all(12.0),
-          ),
-          RawMaterialButton(
-            onPressed: () => _onCallEnd(context),
-            child: Icon(
-              Icons.call_end,
-              color: Colors.white,
-              size: 30.0,
-            ),
-            shape: CircleBorder(),
-            elevation: 2.0,
-            fillColor: Colors.redAccent,
-            padding: const EdgeInsets.all(15.0),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _onToggleMute() {
-    setState(() {
-      muted = !muted;
-    });
-    _engine.muteLocalAudioStream(muted);
-  }
-
-  List<Widget> _getRenderViews() {
-    final List<StatefulWidget> list = [];
-    if (widget.role == ClientRole.Broadcaster) {
-      list.add(RtcLocalView.SurfaceView());
-    }
-    _users.forEach((int uid) => list.add(RtcRemoteView.SurfaceView(uid: uid)));
-    return list;
-  }
-}
-*/
 class VoiceCallView extends StatefulWidget {
   final ClientRole role = ClientRole.Broadcaster;
   final String token;
@@ -238,22 +29,44 @@ class VoiceCallView extends StatefulWidget {
 
 class _VoiceCallViewState extends State<VoiceCallView> {
   bool muted = false;
+  bool isfreeze = false;
+  int freezeCounter = 1;
   final _users = <int>[];
   final _infoStrings = <String>[];
   RtcEngine _engine;
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-  CountdownTimerController controller;
-  bool isConsultantOnline = false;
-  int endTime = DateTime.now().millisecondsSinceEpoch + 1000 * 30;
+  bool isUserOnline = false;
+  CountDownController _controller = CountDownController();
+
+  Timer _timer;
+  int _freezeCounterTimer = 30;
+
+  void startFreezeTimer() {
+    const oneSec = const Duration(seconds: 1);
+    _timer = new Timer.periodic(
+      oneSec,
+      (Timer timer) {
+        if (_freezeCounterTimer == 1) {
+          setState(() {
+            timer.cancel();
+            isfreeze = false;
+            _controller.resume();
+          });
+        } else {
+          setState(() {
+            _freezeCounterTimer--;
+          });
+        }
+      },
+    );
+  }
 
   @override
   void dispose() {
-    // clear users
     _users.clear();
-    // destroy sdk
     _engine.leaveChannel();
     _engine.destroy();
-    controller.dispose();
+    _timer.cancel();
     super.dispose();
   }
 
@@ -261,7 +74,6 @@ class _VoiceCallViewState extends State<VoiceCallView> {
   void initState() {
     super.initState();
     changeStatus();
-    controller = CountdownTimerController(endTime: endTime);
     Screen.keepOn(true);
     print(widget.token);
     initialize();
@@ -337,12 +149,13 @@ class _VoiceCallViewState extends State<VoiceCallView> {
     }, userOffline: (uid, elapsed) {
       setState(() {
         _users.remove(uid);
-        isConsultantOnline = false;
+        _onCallEnd(context);
+        isUserOnline = false;
       });
     }, leaveChannel: (stats) {
       setState(() {
         _users.clear();
-        isConsultantOnline = false;
+        isUserOnline = false;
       });
     }, userJoined: (uid, elapsed) {
       setState(() {
@@ -350,7 +163,7 @@ class _VoiceCallViewState extends State<VoiceCallView> {
         _snackbar(true, info);
         _infoStrings.add(info);
         _users.add(uid);
-        isConsultantOnline = true;
+        isUserOnline = true;
       });
       Future.delayed(
           Duration(seconds: 5), () => deleteInfoString(_infoStrings));
@@ -365,7 +178,7 @@ class _VoiceCallViewState extends State<VoiceCallView> {
     Navigator.pushAndRemoveUntil(
       context,
       CupertinoPageRoute(
-        builder: (context) => MainView(),
+        builder: (context) => CallEndView(response: widget.response),
       ),
       (_) => false,
     );
@@ -375,60 +188,10 @@ class _VoiceCallViewState extends State<VoiceCallView> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        _onCallEnd(context);
-        return true;
+        return false;
       },
       child: Scaffold(
         key: scaffoldKey,
-        extendBodyBehindAppBar: true,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          leading: Container(),
-          elevation: 0,
-          actions: [
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.only(right: 10),
-                child: CountdownTimer(
-                  controller: controller,
-                  widgetBuilder: (context, currentRemainingTime) {
-                    if (currentRemainingTime.min == 4 &&
-                        currentRemainingTime.sec == 53) {
-                      Future.delayed(Duration(seconds: 1),
-                          () => deleteInfoString(_infoStrings));
-                      return Text(
-                        "${currentRemainingTime.min == null ? 00 : currentRemainingTime.min}:${currentRemainingTime.sec}",
-                        style: customTextStyle(),
-                      );
-                    } else if (currentRemainingTime.sec == 1 &&
-                        currentRemainingTime.min == null) {
-                      Future.delayed(
-                          Duration(milliseconds: 500),
-                          () => Navigator.pushAndRemoveUntil(
-                                context,
-                                CupertinoPageRoute(
-                                  builder: (context) => MainView(),
-                                ),
-                                (_) => false,
-                              ));
-
-                      return Text(
-                        "${currentRemainingTime.min == null ? 00 : currentRemainingTime.min}:${currentRemainingTime.sec == null ? 00 : currentRemainingTime.sec}",
-                        style: customTextStyle(),
-                      );
-                    } else {
-                      return Text(
-                        "${currentRemainingTime.min == null ? 00 : currentRemainingTime.min}:${currentRemainingTime.sec == null ? 00 : currentRemainingTime.sec}",
-                        style: customTextStyle(),
-                      );
-                    }
-                  },
-                ),
-              ),
-            )
-          ],
-        ),
-        backgroundColor: Colors.black,
         body: Center(
           child: Stack(
             children: <Widget>[
@@ -454,32 +217,83 @@ class _VoiceCallViewState extends State<VoiceCallView> {
     return Container(
       alignment: Alignment.bottomCenter,
       padding: const EdgeInsets.symmetric(vertical: 48),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
-          RawMaterialButton(
-            onPressed: _onToggleMute,
-            child: Icon(
-              muted ? Icons.mic_off : Icons.mic,
-              color: muted ? Colors.white : Colors.blueAccent,
-              size: 35.0,
-            ),
-            shape: CircleBorder(),
-            elevation: 2.0,
-            fillColor: muted ? Colors.blueAccent : Colors.white,
-            padding: const EdgeInsets.all(12.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              RawMaterialButton(
+                onPressed: _onToggleMute,
+                child: Icon(
+                  muted ? Icons.mic_off : Icons.mic,
+                  color: muted ? Colors.white : Theme.of(context).accentColor,
+                  size: 35.0,
+                ),
+                shape: CircleBorder(),
+                elevation: 2.0,
+                fillColor: muted ? Theme.of(context).accentColor : Colors.white,
+                padding: const EdgeInsets.all(12.0),
+              ),
+              Column(
+                children: [
+                  Text(
+                    freezeCounter.toString(),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                      color: Theme.of(context).accentColor,
+                    ),
+                  ),
+                  RawMaterialButton(
+                    onPressed: freezeCounter == 0
+                        ? null
+                        : () {
+                            _controller.pause();
+                            setState(() {
+                              isfreeze = !isfreeze;
+                              freezeCounter--;
+                              startFreezeTimer();
+                            });
+                          },
+                    child: Icon(
+                      FontAwesomeIcons.snowflake,
+                      color: isfreeze
+                          ? Colors.white
+                          : Theme.of(context).accentColor,
+                      size: 35.0,
+                    ),
+                    shape: CircleBorder(),
+                    elevation: 2.0,
+                    fillColor:
+                        isfreeze ? Theme.of(context).accentColor : Colors.white,
+                    padding: const EdgeInsets.all(12.0),
+                  ),
+                ],
+              ),
+            ],
           ),
-          RawMaterialButton(
-            onPressed: () => _onCallEnd(context),
-            child: Icon(
-              Icons.call_end,
-              color: Colors.white,
-              size: 30.0,
-            ),
-            shape: CircleBorder(),
-            elevation: 2.0,
-            fillColor: Colors.redAccent,
-            padding: const EdgeInsets.all(15.0),
+          SizedBox(height: 20),
+          FractionallySizedBox(
+            widthFactor: 0.7,
+            child: ElevatedButton(
+                onPressed: () => _onCallEnd(context),
+                style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(vertical: 15),
+                    primary: Theme.of(context).accentColor,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15)),
+                    shadowColor: Theme.of(context).accentColor.withOpacity(0.5),
+                    elevation: 10),
+                child: Text(
+                  "Bitir",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    letterSpacing: 1,
+                  ),
+                )),
           ),
         ],
       ),
@@ -508,23 +322,6 @@ class _VoiceCallViewState extends State<VoiceCallView> {
             _expandedVideoRow([views[0]]),
           ],
         ));
-      case 3:
-        return Container(
-            child: Column(
-          children: <Widget>[
-            _expandedVideoRow(views.sublist(0, 2)),
-            _expandedVideoRow(views.sublist(2, 3))
-          ],
-        ));
-      case 4:
-        return Container(
-            child: Column(
-          children: <Widget>[
-            _expandedVideoRow(views.sublist(0, 2)),
-            _expandedVideoRow(views.sublist(2, 4))
-          ],
-        ));
-      default:
     }
     return Container();
   }
@@ -551,31 +348,93 @@ class _VoiceCallViewState extends State<VoiceCallView> {
     return Expanded(
         child: Container(
       alignment: Alignment.center,
-      color: Colors.grey,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          stops: [0.1, 0.9],
+          colors: [
+            Color(0xFFD64565),
+            Color(0xffe08791),
+          ],
+        ),
+      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.account_circle,
-            color: Colors.white,
-            size: MediaQuery.of(context).size.width * 0.5,
-          ),
+          Spacer(flex: 3),
           Text(
             widget.response.username,
             style: TextStyle(
                 color: Colors.white,
-                fontSize: 20,
+                fontSize: 25,
                 fontWeight: FontWeight.bold,
                 letterSpacing: 0.5),
           ),
-          Text(
-            isConsultantOnline ? "Çevrimiçi" : "Çevrimdışı",
-            style: TextStyle(
-                color: isConsultantOnline ? Colors.green : Colors.red,
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 0.5),
+          Spacer(),
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              CircleAvatar(
+                radius: MediaQuery.of(context).size.width / 3,
+                backgroundColor: Colors.white.withOpacity(0.05),
+              ),
+              CircleAvatar(
+                radius: MediaQuery.of(context).size.width / 3.5,
+                backgroundColor: Colors.white.withOpacity(0.15),
+              ),
+              CircleAvatar(
+                radius: MediaQuery.of(context).size.width / 4,
+                backgroundColor: Colors.white.withOpacity(0.25),
+              ),
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  CircularCountDownTimer(
+                    duration: 60,
+                    initialDuration: 0,
+                    controller: _controller,
+                    isReverse: true,
+                    onComplete: () => _onCallEnd(context),
+                    fillColor: Colors.white,
+                    backgroundColor: Colors.white,
+                    height: MediaQuery.of(context).size.height / 4,
+                    ringColor: Colors.transparent,
+                    width: MediaQuery.of(context).size.width / 2,
+                    textStyle: TextStyle(
+                        color: Theme.of(context).accentColor,
+                        fontSize: 40,
+                        fontWeight: FontWeight.w600),
+                  ),
+                  Visibility(
+                    visible: isfreeze ? true : false,
+                    child: Center(
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                        child: Container(
+                          width: MediaQuery.of(context).size.width / 2.4,
+                          height: MediaQuery.of(context).size.height / 4.4,
+                          decoration: new BoxDecoration(
+                            color: Colors.grey.shade200.withOpacity(0.5),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Center(
+                              child: Text(
+                            "+" + "$_freezeCounterTimer",
+                            style: TextStyle(
+                                color: Colors.cyan,
+                                fontSize: 40,
+                                fontWeight: FontWeight.w600),
+                          )),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
+          Spacer(flex: 6),
         ],
       ),
     ));

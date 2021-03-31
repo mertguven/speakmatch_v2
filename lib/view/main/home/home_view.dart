@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:speakmatch_v2/controller/home/home_controller.dart';
 import 'package:speakmatch_v2/core/components/gradient_text.dart';
 import 'package:speakmatch_v2/model/home/request/UserStatusChangeRequestMessage.dart';
+import 'package:speakmatch_v2/shared-prefs.dart';
 import 'package:speakmatch_v2/view/main/home/call/calling_view.dart';
 import 'package:speakmatch_v2/view/main/home/notification_view.dart';
 import 'package:speakmatch_v2/view/main/pricing/pricing_view.dart';
@@ -142,10 +143,12 @@ class _HomeViewState extends State<HomeView> {
                           child: Switch(
                             materialTapTargetSize:
                                 MaterialTapTargetSize.shrinkWrap,
-                            value: showProfile,
+                            value: SharedPrefs.getVisibilityOfProfile,
                             onChanged: (change) {
                               setState(() {
                                 showProfile = !showProfile;
+                                SharedPrefs.saveVisibilityOfProfile(
+                                    showProfile);
                               });
                             },
                           ),
@@ -227,9 +230,7 @@ class _HomeViewState extends State<HomeView> {
       );
 
   GestureDetector callButton() => GestureDetector(
-        onTap: () {
-          _changeTheStatus();
-        },
+        onTap: () => _changeTheStatus(),
         child: Lottie.asset("assets/animations/call.json"),
       );
 
@@ -260,6 +261,7 @@ class _HomeViewState extends State<HomeView> {
     if (permissionStatus.isGranted) {
       UserStatusChangeRequestMessage request =
           UserStatusChangeRequestMessage(status: "Online");
+      SharedPrefs.saveVisibilityOfProfile(showProfile);
       var response = await homeController.changeUserStatus(request);
       if (response.success) {
         Navigator.push(

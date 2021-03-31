@@ -14,6 +14,10 @@ class SharedPrefs {
     return _prefs.setString('token', token);
   }
 
+  static Future<void> saveVisibilityOfProfile(bool visibility) async {
+    return _prefs.setBool("visibilityOfProfile", visibility);
+  }
+
   static Future<void> sharedClear() async {
     return _prefs.clear();
   }
@@ -23,5 +27,7 @@ class SharedPrefs {
   }
 
   static bool get getLogin => _prefs.getBool('login') ?? false;
+  static bool get getVisibilityOfProfile =>
+      _prefs.getBool('visibilityOfProfile') ?? true;
   static String get getToken => _prefs.getString('token') ?? null;
 }
