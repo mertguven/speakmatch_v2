@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:speakmatch_v2/model/home/call/response/SelectOnlineUserResponseMessage.dart';
-import 'package:speakmatch_v2/shared-prefs.dart';
 import 'package:speakmatch_v2/view/main/main_view.dart';
 
 class CallEndView extends StatefulWidget {

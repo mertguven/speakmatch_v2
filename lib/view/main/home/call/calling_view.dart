@@ -81,8 +81,7 @@ class _CallingViewState extends State<CallingView> {
           });
           break;
         }
-      }
-      /*else {
+      } else {
         if (searchCounter > 10) {
           selectError();
           break;
@@ -90,7 +89,7 @@ class _CallingViewState extends State<CallingView> {
           searchCounter++;
         }
         Future.delayed(Duration(seconds: 1));
-      }*/
+      }
     }
   }
 

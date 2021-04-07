@@ -10,6 +10,8 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:screen/screen.dart';
 import 'package:speakmatch_v2/controller/home/home_controller.dart';
+import 'package:speakmatch_v2/model/home/call/request/ListenFreezeTimeRequestMessage.dart';
+import 'package:speakmatch_v2/model/home/call/response/ListenFreezeTimeResponseMessage.dart';
 import 'package:speakmatch_v2/model/home/call/response/SelectOnlineUserResponseMessage.dart';
 import 'package:speakmatch_v2/model/home/request/UserStatusChangeRequestMessage.dart';
 import 'package:speakmatch_v2/utilities/settings.dart';
@@ -37,6 +39,10 @@ class _VoiceCallViewState extends State<VoiceCallView> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   bool isUserOnline = false;
   CountDownController _controller = CountDownController();
+  StreamController<ListenFreezeTimeResponseMessage> streamController =
+      StreamController<ListenFreezeTimeResponseMessage>();
+  StreamSubscription<ListenFreezeTimeResponseMessage> streamSubscription;
+  Stream stream;
 
   Timer _timer;
   int _freezeCounterTimer = 30;
@@ -63,11 +69,12 @@ class _VoiceCallViewState extends State<VoiceCallView> {
 
   @override
   void dispose() {
+    super.dispose();
     _users.clear();
     _engine.leaveChannel();
     _engine.destroy();
     _timer.cancel();
-    super.dispose();
+    streamSubscription?.cancel();
   }
 
   @override
@@ -77,6 +84,8 @@ class _VoiceCallViewState extends State<VoiceCallView> {
     Screen.keepOn(true);
     print(widget.token);
     initialize();
+    stream = streamController.stream;
+    listenToFreeze();
   }
 
   Future<void> initialize() async {
@@ -252,9 +261,9 @@ class _VoiceCallViewState extends State<VoiceCallView> {
                         : () {
                             _controller.pause();
                             setState(() {
-                              isfreeze = !isfreeze;
+                              isfreeze = true;
                               freezeCounter--;
-                              startFreezeTimer();
+                              //startFreezeTimer();
                             });
                           },
                     child: Icon(
@@ -445,5 +454,26 @@ class _VoiceCallViewState extends State<VoiceCallView> {
     UserStatusChangeRequestMessage request =
         UserStatusChangeRequestMessage(status: "Busy");
     await homeController.changeUserStatus(request);
+  }
+
+  listenToFreeze() async {
+    var homeController = Provider.of<HomeController>(context, listen: false);
+
+    while (true) {
+      ListenFreezeTimeRequestMessage request =
+          ListenFreezeTimeRequestMessage(odaNo: widget.response.roomNo);
+      var response = await homeController.listenFreezeTime(request);
+      if (response.freezeTime == "1") {
+        streamController.add(response);
+        streamSubscription = stream.listen((value) async {
+          streamSubscription?.cancel();
+          setState(() {
+            isfreeze = true;
+            startFreezeTimer();
+          });
+        });
+        break;
+      }
+    }
   }
 }

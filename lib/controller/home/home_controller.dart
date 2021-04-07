@@ -1,6 +1,10 @@
 import 'package:speakmatch_v2/controller/interfaces/ihome_base.dart';
+import 'package:speakmatch_v2/model/home/call/request/ListenFreezeTimeRequestMessage.dart';
+import 'package:speakmatch_v2/model/home/call/request/TrackMeetTimeRequestMessage.dart';
 import 'package:speakmatch_v2/model/home/call/response/GenerateAgoraTokenResponseMessage.dart';
+import 'package:speakmatch_v2/model/home/call/response/ListenFreezeTimeResponseMessage.dart';
 import 'package:speakmatch_v2/model/home/call/response/SelectOnlineUserResponseMessage.dart';
+import 'package:speakmatch_v2/model/home/call/response/TrackMeetTimeResponseMessage.dart';
 import 'package:speakmatch_v2/model/home/request/UserStatusChangeRequestMessage.dart';
 import 'package:speakmatch_v2/model/home/response/GetOnlineUsersResponseMessage.dart';
 import 'package:speakmatch_v2/model/home/response/UserStatusChangeResponseMessage.dart';
@@ -44,5 +48,30 @@ class HomeController extends IHomeBase {
     var generateAgoraTokenResponseMessage =
         GenerateAgoraTokenResponseMessage.fromJson(item);
     return generateAgoraTokenResponseMessage;
+  }
+
+  @override
+  Future<TrackMeetTimeResponseMessage> trackMeetTime(
+      TrackMeetTimeRequestMessage request) async {
+    _requestBody = {
+      "oda_no": request.odaNo,
+      "freezeTime": request.freezeTime,
+    };
+    final item = await _webService.sendRequestWithPostAndToken(
+        "TrackMeetTime", _requestBody);
+    var trackMeetTimeResponseMessage =
+        TrackMeetTimeResponseMessage.fromJson(item);
+    return trackMeetTimeResponseMessage;
+  }
+
+  @override
+  Future<ListenFreezeTimeResponseMessage> listenFreezeTime(
+      ListenFreezeTimeRequestMessage request) async {
+    _requestBody = {"oda_no": request.odaNo};
+    final item = await _webService.sendRequestWithPostAndToken(
+        "ListenFreezeTime", _requestBody);
+    var listenFreezeTimeResponseMessage =
+        ListenFreezeTimeResponseMessage.fromJson(item);
+    return listenFreezeTimeResponseMessage;
   }
 }
