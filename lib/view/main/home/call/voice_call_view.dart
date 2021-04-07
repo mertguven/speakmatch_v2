@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:screen/screen.dart';
 import 'package:speakmatch_v2/controller/home/home_controller.dart';
 import 'package:speakmatch_v2/model/home/call/request/ListenFreezeTimeRequestMessage.dart';
+import 'package:speakmatch_v2/model/home/call/request/TrackMeetTimeRequestMessage.dart';
 import 'package:speakmatch_v2/model/home/call/response/ListenFreezeTimeResponseMessage.dart';
 import 'package:speakmatch_v2/model/home/call/response/SelectOnlineUserResponseMessage.dart';
 import 'package:speakmatch_v2/model/home/request/UserStatusChangeRequestMessage.dart';
@@ -51,8 +52,13 @@ class _VoiceCallViewState extends State<VoiceCallView> {
     const oneSec = const Duration(seconds: 1);
     _timer = new Timer.periodic(
       oneSec,
-      (Timer timer) {
+      (Timer timer) async {
         if (_freezeCounterTimer == 1) {
+          var homeController =
+              Provider.of<HomeController>(context, listen: false);
+          TrackMeetTimeRequestMessage request = TrackMeetTimeRequestMessage(
+              odaNo: widget.response.roomNo, freezeTime: 0);
+          await homeController.trackMeetTime(request);
           setState(() {
             timer.cancel();
             isfreeze = false;
@@ -263,7 +269,7 @@ class _VoiceCallViewState extends State<VoiceCallView> {
                             setState(() {
                               isfreeze = true;
                               freezeCounter--;
-                              //startFreezeTimer();
+                              trackMeetTime();
                             });
                           },
                     child: Icon(
@@ -475,5 +481,12 @@ class _VoiceCallViewState extends State<VoiceCallView> {
         break;
       }
     }
+  }
+
+  trackMeetTime() async {
+    var homeController = Provider.of<HomeController>(context, listen: false);
+    TrackMeetTimeRequestMessage request = TrackMeetTimeRequestMessage(
+        odaNo: widget.response.roomNo, freezeTime: 1);
+    await homeController.trackMeetTime(request);
   }
 }
