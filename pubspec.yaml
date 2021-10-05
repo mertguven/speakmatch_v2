@@ -28,26 +28,9 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0
-  font_awesome_flutter: ^8.11.0
-  rive: ^0.6.8
-  lottie: ^0.7.0+1
-  shared_preferences: ^0.5.12+4
-  http: ^0.12.2
-  get: ^3.25.4
-  image_picker: ^0.6.7+22
-  modal_bottom_sheet: ^1.0.0+1
-  url_launcher: ^5.7.10
-  dio: ^3.0.10
-  contacts_service: ^0.4.6
-  permission_handler: ^5.1.0+2
-  provider: ^4.3.3
-  http_parser: ^3.1.4
-  page_transition: ^1.1.7+6
-  flutter_cache_manager: ^2.1.2
-  agora_rtc_engine: ^3.3.1
-  screen: ^0.0.5
-  flutter_countdown_timer: ^4.0.0
-  circular_countdown_timer: ^0.2.0
+  shared_preferences: ^2.0.8
+  get: ^4.3.8
+  font_awesome_flutter: ^9.1.0
 
 dev_dependencies:
   flutter_test:
