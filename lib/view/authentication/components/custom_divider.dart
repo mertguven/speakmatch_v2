@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:speakmatch_v2/core/utilities/screen_size_extension.dart';
 
 class CustomDivider extends StatelessWidget {
   final String centerText;

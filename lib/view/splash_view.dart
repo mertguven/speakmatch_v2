@@ -2,7 +2,10 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:speakmatch_v2/shared-prefs.dart';
 import 'package:speakmatch_v2/view/authentication/authentication_view.dart';
+import 'package:speakmatch_v2/view/main/page_router_view.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({Key key}) : super(key: key);
@@ -27,7 +30,7 @@ class _SplashViewState extends State<SplashView> {
             widthFactor: 0.5,
             child: Hero(
                 tag: "logo",
-                child: Image.asset("assets/images/login_screen.png"))),
+                child: Image.asset("assets/images/speakmatch_logo.png"))),
       ),
     );
   }
@@ -35,12 +38,14 @@ class _SplashViewState extends State<SplashView> {
   Future<void> redirect() async {
     Future.delayed(
       Duration(seconds: 2),
-      () => Navigator.pushAndRemoveUntil(
-          context,
-          PageRouteBuilder(
-              transitionDuration: Duration(seconds: 2),
-              pageBuilder: (_, __, ___) => AuthenticationView()),
-          (_) => false),
+      () {
+        if (SharedPrefs.getLogin) {
+          Get.offAll(() => PageRouterView(), duration: Duration(seconds: 1));
+        } else {
+          Get.offAll(() => AuthenticationView(),
+              duration: Duration(seconds: 1));
+        }
+      },
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:speakmatch_v2/core/theme/app_theme.dart';
@@ -8,10 +9,16 @@ import 'core/theme/app_theme.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SharedPrefs.initialize();
-  runApp(MyApp());
+  await Firebase.initializeApp();
+  runApp(App());
 }
 
-class MyApp extends StatelessWidget {
+class App extends StatefulWidget {
+  @override
+  State<App> createState() => _AppState();
+}
+
+class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
-class LoginAndSignInButton extends StatelessWidget {
+class LoginAndSignUpButton extends StatelessWidget {
   final String buttonText;
-  const LoginAndSignInButton({
+  final VoidCallback onPressed;
+  const LoginAndSignUpButton({
     Key key,
     @required this.buttonText,
+    @required this.onPressed,
   }) : super(key: key);
 
   @override
@@ -19,7 +21,7 @@ class LoginAndSignInButton extends StatelessWidget {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           primary: Theme.of(context).colorScheme.secondary),
-      onPressed: () {},
+      onPressed: onPressed,
     );
   }
 }
