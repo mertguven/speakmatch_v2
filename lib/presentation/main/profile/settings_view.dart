@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:speakmatch_v2/controller/authentication_controller.dart';
-import 'package:speakmatch_v2/view/authentication/authentication_view.dart';
+import 'package:speakmatch_v2/presentation/authentication/authentication_view.dart';
 
 class SettingsView extends StatefulWidget {
   const SettingsView({Key key}) : super(key: key);

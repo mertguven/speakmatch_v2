@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:speakmatch_v2/view/main/profile/edit_profile_view.dart';
-import 'package:speakmatch_v2/view/main/profile/settings_view.dart';
+import 'package:speakmatch_v2/presentation/main/profile/edit_profile_view.dart';
+import 'package:speakmatch_v2/presentation/main/profile/settings_view.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({Key key}) : super(key: key);

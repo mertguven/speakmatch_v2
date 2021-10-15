@@ -5,10 +5,10 @@ import 'package:get/get.dart';
 import 'package:speakmatch_v2/controller/authentication_controller.dart';
 import 'package:speakmatch_v2/core/utilities/custom_dialog.dart';
 import 'package:speakmatch_v2/core/utilities/custom_snackbar.dart';
-import 'package:speakmatch_v2/model/authentication/request/forgot_password_request_model.dart';
-import 'package:speakmatch_v2/model/authentication/response/forgot_password_response_model.dart';
-import 'package:speakmatch_v2/view/authentication/authentication_view.dart';
-import 'package:speakmatch_v2/view/authentication/components/custom_divider.dart';
+import 'package:speakmatch_v2/data/model/authentication/request/forgot_password_request_model.dart';
+import 'package:speakmatch_v2/data/model/authentication/response/forgot_password_response_model.dart';
+import 'package:speakmatch_v2/presentation/authentication/authentication_view.dart';
+import 'package:speakmatch_v2/presentation/authentication/components/custom_divider.dart';
 
 class ForgotPasswordView extends StatefulWidget {
   const ForgotPasswordView({Key key}) : super(key: key);
@@ -146,8 +146,6 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
               ForgotPasswordRequestModel(email: emailTextController.text));
       if (response.success) {
         successForgotPasswordDialog();
-      } else {
-        customSnackbar(false, "Something went wrong.");
       }
     } else {
       customSnackbar(false, "Email field must be filled.");

@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:speakmatch_v2/core/utilities/custom_snackbar.dart';
-import 'package:speakmatch_v2/model/authentication/request/authentication_request_model.dart';
-import 'package:speakmatch_v2/model/authentication/request/forgot_password_request_model.dart';
+import 'package:speakmatch_v2/data/model/authentication/request/authentication_request_model.dart';
+import 'package:speakmatch_v2/data/model/authentication/request/forgot_password_request_model.dart';
 import 'package:speakmatch_v2/shared-prefs.dart';
 
 class AuthenticationService {
@@ -23,13 +23,14 @@ class AuthenticationService {
       customSnackbar(false, e.message);
       return null;
     } catch (e) {
-      print(e);
+      print("authentication service error:" + e.toString());
       return null;
     }
   }
 
   Future<User> login(AuthenticationRequestModel model) async {
     try {
+      //burayı repoya taşu
       _userCredential = await _firebaseAuth.signInWithEmailAndPassword(
           email: model.email, password: model.password);
       if (UserCredential != null && !_userCredential.user.emailVerified) {
@@ -44,7 +45,7 @@ class AuthenticationService {
       customSnackbar(false, e.message);
       return null;
     } catch (e) {
-      print(e);
+      print("authentication service error:" + e.toString());
       return null;
     }
   }
@@ -53,7 +54,7 @@ class AuthenticationService {
     try {
       return _firebaseAuth.currentUser;
     } catch (e) {
-      print(e);
+      print("authentication service error:" + e.toString());
       return null;
     }
   }
@@ -66,7 +67,7 @@ class AuthenticationService {
       customSnackbar(false, e.message);
       return false;
     } catch (e) {
-      print(e);
+      print("authentication service error:" + e.toString());
       return false;
     }
   }
@@ -85,9 +86,13 @@ class AuthenticationService {
 
       final responseCredential =
           await FirebaseAuth.instance.signInWithCredential(credential);
+      await SharedPrefs.login();
       return responseCredential.user;
+    } on FirebaseAuthException catch (e) {
+      customSnackbar(false, e.message);
+      return null;
     } catch (e) {
-      print(e.toString());
+      print("authentication service error:" + e.toString());
       return null;
     }
   }
@@ -99,11 +104,12 @@ class AuthenticationService {
         await _googleSignIn.disconnect();
       }
       if (_firebaseAuth.currentUser != null) {
+        await _googleSignIn.signOut();
         await _firebaseAuth.signOut();
       }
       return true;
     } catch (e) {
-      print(e.toString());
+      print("authentication service error:" + e.toString());
       return false;
     }
   }

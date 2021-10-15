@@ -4,8 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:speakmatch_v2/shared-prefs.dart';
-import 'package:speakmatch_v2/view/authentication/authentication_view.dart';
-import 'package:speakmatch_v2/view/main/page_router_view.dart';
+import 'package:speakmatch_v2/presentation/authentication/authentication_view.dart';
+import 'package:speakmatch_v2/presentation/main/page_router_view.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({Key key}) : super(key: key);

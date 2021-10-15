@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:speakmatch_v2/core/theme/app_theme.dart';
 import 'package:speakmatch_v2/shared-prefs.dart';
-import 'package:speakmatch_v2/view/splash_view.dart';
+import 'package:speakmatch_v2/presentation/splash_view.dart';
 import 'core/theme/app_theme.dart';
 
 Future<void> main() async {

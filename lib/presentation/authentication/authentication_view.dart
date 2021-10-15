@@ -9,10 +9,10 @@ import 'package:get/get.dart';
 import 'package:speakmatch_v2/controller/authentication_controller.dart';
 import 'package:speakmatch_v2/core/utilities/custom_dialog.dart';
 import 'package:speakmatch_v2/core/utilities/custom_snackbar.dart';
-import 'package:speakmatch_v2/model/authentication/request/authentication_request_model.dart';
-import 'package:speakmatch_v2/model/authentication/response/authentication_response_model.dart';
-import 'package:speakmatch_v2/view/authentication/forgot_password_view.dart';
-import 'package:speakmatch_v2/view/main/page_router_view.dart';
+import 'package:speakmatch_v2/data/model/authentication/request/authentication_request_model.dart';
+import 'package:speakmatch_v2/data/model/authentication/response/authentication_response_model.dart';
+import 'package:speakmatch_v2/presentation/authentication/forgot_password_view.dart';
+import 'package:speakmatch_v2/presentation/main/page_router_view.dart';
 
 import 'components/custom_authentication_textfield.dart';
 import 'components/custom_divider.dart';
@@ -338,6 +338,7 @@ class _AuthenticationViewState extends State<AuthenticationView>
       if (registerTextController[2].text == registerTextController[3].text) {
         AuthenticationResponseModel responseModel =
             await authenticationController.signUp(AuthenticationRequestModel(
+                name: registerTextController[0].text,
                 email: registerTextController[1].text,
                 password: registerTextController[2].text));
         if (responseModel != null) {
@@ -380,6 +381,9 @@ class _AuthenticationViewState extends State<AuthenticationView>
   }
 
   Future loginWithGoogle() async {
-    await authenticationController.loginWithGoogle();
+    final response = await authenticationController.loginWithGoogle();
+    if (response != null) {
+      Get.offAll(() => PageRouterView());
+    }
   }
 }

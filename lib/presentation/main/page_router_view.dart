@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
-import 'package:speakmatch_v2/view/main/home/home_view.dart';
-import 'package:speakmatch_v2/view/main/messages/messages_view.dart';
-import 'package:speakmatch_v2/view/main/profile/profile_view.dart';
+import 'package:speakmatch_v2/presentation/main/home/home_view.dart';
+import 'package:speakmatch_v2/presentation/main/messages/messages_view.dart';
+import 'package:speakmatch_v2/presentation/main/profile/profile_view.dart';
 
 class PageRouterView extends StatefulWidget {
   const PageRouterView({Key key}) : super(key: key);
