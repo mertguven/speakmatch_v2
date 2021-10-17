@@ -140,8 +140,10 @@ The design pattern of the project is [MVC](https://en.wikipedia.org/wiki/Modelâ€
 
 <div id="license"></div>
 
+## License
+
 <pre>
-Copyright 2018 Pawan Kumar
+Copyright 2021 MERT GÃœVEN
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
