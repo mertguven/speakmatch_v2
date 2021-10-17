@@ -10,10 +10,9 @@
   <h1 align="center">SpeakMatch</h1>
 
   <p align="center">
-    Speakmatch is a video or audio chat application!
+    Speakmatch is a video, audio and chat application!
   </p>
 </div>
-
 
 
 <!-- TABLE OF CONTENTS -->
