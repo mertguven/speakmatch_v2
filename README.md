@@ -62,10 +62,10 @@
 │   │   └── service
 │   ├── presentation
 │   │   ├── authentication
-│   │   ├── main
-│   │   │   ├── home
-│   │   │   ├── messages
-│   │   │   └── profile
+│   │   └── main
+│   │       ├── home
+│   │       ├── messages
+│   │       └── profile
 │   ├── main.dart
 │   └── shared-prefs.dart
 ├── pubspec.lock
