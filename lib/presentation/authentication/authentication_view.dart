@@ -4,20 +4,22 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart' as bloc;
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:speakmatch_v2/controller/authentication_controller.dart';
 import 'package:speakmatch_v2/core/utilities/custom_dialog.dart';
 import 'package:speakmatch_v2/core/utilities/custom_snackbar.dart';
+import 'package:speakmatch_v2/cubit/authentication/authentication_cubit.dart';
 import 'package:speakmatch_v2/data/model/authentication/request/authentication_request_model.dart';
-import 'package:speakmatch_v2/data/model/authentication/response/authentication_response_model.dart';
 import 'package:speakmatch_v2/presentation/authentication/forgot_password_view.dart';
 import 'package:speakmatch_v2/presentation/main/page_router_view.dart';
 
 import 'components/custom_authentication_textfield.dart';
 import 'components/custom_divider.dart';
 import 'components/google_button.dart';
-import 'components/login_signup_button.dart';
+import 'components/login_signUp_button.dart';
 
 class AuthenticationView extends StatefulWidget {
   const AuthenticationView({Key key}) : super(key: key);
@@ -81,9 +83,39 @@ class _AuthenticationViewState extends State<AuthenticationView>
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
-      child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        body: bodyWidget(),
+      child: bloc.BlocConsumer<AuthenticationCubit, AuthenticationState>(
+        listener: (context, state) {
+          if (state is AuthenticationLoadingState) {
+            EasyLoading.show(status: "Loading...");
+          } else {
+            EasyLoading.dismiss();
+            if (state is AuthenticationLoginOrGoogleSuccessfulState) {
+              Get.offAll(() => PageRouterView());
+            } else if (state is AuthenticationLoginOrGoogleUnsuccessfulState) {
+              customSnackbar(false, state.errorMessage);
+            } else if (state is AuthenticationSignupSuccessfulState) {
+              customDialog(
+                  context: context,
+                  content:
+                      "Verification email has been sent. Please confirm your email.",
+                  onPressed: () {
+                    Get.back();
+                    _tabController.animateTo(0, curve: Curves.easeInOutBack);
+                  },
+                  buttonText: "Got it",
+                  title: "Email has been sent",
+                  image: Image.asset("assets/images/sent_email.png"));
+            } else if (state is AuthenticationSignupUnsuccessfulState) {
+              customSnackbar(false, state.errorMessage);
+            }
+          }
+        },
+        builder: (context, state) {
+          return Scaffold(
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            body: bodyWidget(),
+          );
+        },
       ),
     );
   }
@@ -242,8 +274,8 @@ class _AuthenticationViewState extends State<AuthenticationView>
     return Align(
       alignment: Alignment.centerLeft,
       child: GestureDetector(
-        onTap: () =>
-            Get.to(ForgotPasswordView(), transition: Transition.rightToLeft),
+        onTap: () => Get.to(() => ForgotPasswordView(),
+            transition: Transition.rightToLeft),
         child: Text(
           "Forgot Password?",
           style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 16),
@@ -336,24 +368,10 @@ class _AuthenticationViewState extends State<AuthenticationView>
         registerTextController[2].text.isNotEmpty &&
         registerTextController[3].text.isNotEmpty) {
       if (registerTextController[2].text == registerTextController[3].text) {
-        AuthenticationResponseModel responseModel =
-            await authenticationController.signUp(AuthenticationRequestModel(
-                name: registerTextController[0].text,
-                email: registerTextController[1].text,
-                password: registerTextController[2].text));
-        if (responseModel != null) {
-          customDialog(
-              context: context,
-              content:
-                  "Verification email has been sent. Please confirm your email.",
-              onPressed: () {
-                Get.back();
-                _tabController.animateTo(0, curve: Curves.easeInOutBack);
-              },
-              buttonText: "Got it",
-              title: "Email has been sent",
-              image: Image.asset("assets/images/sent_email.png"));
-        }
+        context.read<AuthenticationCubit>().signUp(AuthenticationRequestModel(
+            name: registerTextController[0].text,
+            email: registerTextController[1].text,
+            password: registerTextController[2].text));
       } else {
         customSnackbar(false, "Passwords must be the same");
       }
@@ -365,25 +383,15 @@ class _AuthenticationViewState extends State<AuthenticationView>
   Future loginButtonEvent() async {
     if (loginTextController[0].text.isNotEmpty &&
         loginTextController[1].text.isNotEmpty) {
-      AuthenticationResponseModel responseModel =
-          await authenticationController.login(AuthenticationRequestModel(
-              email: loginTextController[0].text,
-              password: loginTextController[1].text));
-      if (responseModel != null) {
-        Get.offAll(() => PageRouterView());
-        //customSnackbar(true, "Login successful");
-        //deneme amaçlıydı!
-        //print(AuthenticationService().currentUser().email);
-      }
+      context.read<AuthenticationCubit>().login(AuthenticationRequestModel(
+          email: loginTextController[0].text,
+          password: loginTextController[1].text));
     } else {
       customSnackbar(false, "All fields must be filled.");
     }
   }
 
   Future loginWithGoogle() async {
-    final response = await authenticationController.loginWithGoogle();
-    if (response != null) {
-      Get.offAll(() => PageRouterView());
-    }
+    context.read<AuthenticationCubit>().loginWithGoogle();
   }
 }

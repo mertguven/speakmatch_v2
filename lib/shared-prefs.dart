@@ -10,8 +10,8 @@ class SharedPrefs {
     }
   }
 
-  static Future<void> saveToken(String token) async {
-    return _prefs.setString('token', token);
+  static Future<void> saveUid(String uid) async {
+    return _prefs.setString('uid', uid);
   }
 
   static Future<void> saveVisibilityOfProfile(bool visibility) async {
@@ -29,5 +29,5 @@ class SharedPrefs {
   static bool get getLogin => _prefs.getBool('login') ?? false;
   static bool get getVisibilityOfProfile =>
       _prefs.getBool('visibilityOfProfile') ?? true;
-  static String get getToken => _prefs.getString('token') ?? null;
+  static String get getUid => _prefs.getString('uid') ?? null;
 }

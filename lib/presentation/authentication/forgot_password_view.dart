@@ -1,12 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_bloc/flutter_bloc.dart' as bloc;
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:speakmatch_v2/controller/authentication_controller.dart';
 import 'package:speakmatch_v2/core/utilities/custom_dialog.dart';
 import 'package:speakmatch_v2/core/utilities/custom_snackbar.dart';
+import 'package:speakmatch_v2/cubit/authentication/authentication_cubit.dart';
 import 'package:speakmatch_v2/data/model/authentication/request/forgot_password_request_model.dart';
-import 'package:speakmatch_v2/data/model/authentication/response/forgot_password_response_model.dart';
 import 'package:speakmatch_v2/presentation/authentication/authentication_view.dart';
 import 'package:speakmatch_v2/presentation/authentication/components/custom_divider.dart';
 
@@ -22,14 +24,50 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
   AuthenticationController authenticationController =
       AuthenticationController();
 
+  Future<void> sendEmail() async {
+    if (emailTextController.text.isNotEmpty) {
+      context.read<AuthenticationCubit>().forgotPassword(
+          ForgotPasswordRequestModel(email: emailTextController.text));
+    } else {
+      customSnackbar(false, "Email field must be filled.");
+    }
+  }
+
+  void successForgotPasswordDialog() {
+    customDialog(
+        context: context,
+        content: "Password reset email has been sent to your email.",
+        onPressed: () => Get.offAll(AuthenticationView(),
+            transition: Transition.leftToRightWithFade),
+        buttonText: "Got it",
+        title: "Email has been sent",
+        image: Image.asset("assets/images/sent_email.png"));
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
-      child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        appBar: appBarWidget(),
-        body: bodyWidget(),
+      child: bloc.BlocConsumer<AuthenticationCubit, AuthenticationState>(
+        listener: (context, state) {
+          if (state is AuthenticationLoadingState) {
+            EasyLoading.show(status: "Loading...");
+          } else {
+            EasyLoading.dismiss();
+            if (state is SuccessForgotPasswordState) {
+              successForgotPasswordDialog();
+            } else if (state is UnSuccessForgotPasswordState) {
+              customSnackbar(false, state.errorMessage);
+            }
+          }
+        },
+        builder: (context, state) {
+          return Scaffold(
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            appBar: appBarWidget(),
+            body: bodyWidget(),
+          );
+        },
       ),
     );
   }
@@ -137,29 +175,5 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
         ),
       ),
     );
-  }
-
-  sendEmail() async {
-    if (emailTextController.text.isNotEmpty) {
-      ForgotPasswordResponseModel response =
-          await authenticationController.forgotPassword(
-              ForgotPasswordRequestModel(email: emailTextController.text));
-      if (response.success) {
-        successForgotPasswordDialog();
-      }
-    } else {
-      customSnackbar(false, "Email field must be filled.");
-    }
-  }
-
-  void successForgotPasswordDialog() {
-    customDialog(
-        context: context,
-        content: "Password reset email has been sent to your email.",
-        onPressed: () => Get.offAll(AuthenticationView(),
-            transition: Transition.leftToRightWithFade),
-        buttonText: "Got it",
-        title: "Email has been sent",
-        image: Image.asset("assets/images/sent_email.png"));
   }
 }
