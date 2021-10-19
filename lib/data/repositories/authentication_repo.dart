@@ -1,36 +1,31 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:speakmatch_v2/controller/iauthentication.dart';
-import 'package:speakmatch_v2/data/model/authentication/response/forgot_password_response_model.dart';
+import 'package:speakmatch_v2/data/model/authentication/response/authentication_service_response_model.dart';
 import 'package:speakmatch_v2/data/model/authentication/response/authentication_response_model.dart';
 import 'package:speakmatch_v2/data/model/authentication/request/forgot_password_request_model.dart';
 import 'package:speakmatch_v2/data/model/authentication/request/authentication_request_model.dart';
-import 'package:speakmatch_v2/service/authentication_service.dart';
-import 'package:speakmatch_v2/service/firestore_service.dart';
+import 'package:speakmatch_v2/data/service/authentication_service.dart';
+import 'package:speakmatch_v2/data/service/firestore_service.dart';
 
 class AuthenticationRepository extends IAuthentication {
   AuthenticationService _authenticationService = AuthenticationService();
   FirestoreService _firestoreService = FirestoreService();
 
   @override
-  Future<AuthenticationResponseModel> signUp(
+  Future<AuthenticationServiceResponseModel> signUp(
       AuthenticationRequestModel model) async {
     try {
-      User user = await _authenticationService.signUp(model);
-      await user.updateDisplayName(model.name);
-      AuthenticationResponseModel responseModel = AuthenticationResponseModel(
-          creationTime: user.metadata.creationTime,
-          lastSignInTime: user.metadata.lastSignInTime,
-          displayName: model.name,
-          email: user.email,
-          emailVerified: user.emailVerified,
-          uid: user.uid);
-      bool responseFirestoreService =
-          await _firestoreService.saveUser(responseModel);
-      if (responseFirestoreService) {
-        return responseModel;
-      } else {
-        return null;
+      final serviceResponse = await _authenticationService.signUp(model);
+      if (serviceResponse.success) {
+        await serviceResponse.user.updateDisplayName(model.name);
+        await _firestoreService.saveUser(AuthenticationResponseModel(
+            creationTime: serviceResponse.user.metadata.creationTime,
+            lastSignInTime: serviceResponse.user.metadata.lastSignInTime,
+            displayName: model.name,
+            email: serviceResponse.user.email,
+            emailVerified: serviceResponse.user.emailVerified,
+            uid: serviceResponse.user.uid));
       }
+      return serviceResponse;
     } catch (e) {
       print("authentication repo error:" + e.toString());
       return null;
@@ -38,62 +33,28 @@ class AuthenticationRepository extends IAuthentication {
   }
 
   @override
-  Future<AuthenticationResponseModel> login(
+  Future<AuthenticationServiceResponseModel> login(
       AuthenticationRequestModel model) async {
     try {
-      User user = await _authenticationService.login(model);
-      AuthenticationResponseModel responseModel = AuthenticationResponseModel(
-          creationTime: user.metadata.creationTime,
-          lastSignInTime: user.metadata.lastSignInTime,
-          displayName: user.displayName,
-          email: user.email,
-          emailVerified: user.emailVerified,
-          uid: user.uid);
-      bool response = await _firestoreService.updateUserData(responseModel);
-      if (response) {
-        return responseModel;
-      } else {
-        return null;
-      }
-    } catch (e) {
-      print("authentication repo error:" + e.toString());
-      return null;
-    }
-  }
-
-  @override
-  Future<ForgotPasswordResponseModel> forgotPassword(
-      ForgotPasswordRequestModel model) async {
-    try {
-      bool response = await _authenticationService.forgotPassword(model);
-      return ForgotPasswordResponseModel(success: response);
-    } catch (e) {
-      print("authentication repo error:" + e.toString());
-      return null;
-    }
-  }
-
-  @override
-  Future<AuthenticationResponseModel> loginWithGoogle() async {
-    try {
-      var user = await _authenticationService.loginWithGoogle();
-      if (user != null) {
-        AuthenticationResponseModel responseModel = AuthenticationResponseModel(
-            creationTime: user.metadata.creationTime,
-            lastSignInTime: user.metadata.lastSignInTime,
-            displayName: user.displayName,
-            email: user.email,
-            emailVerified: user.emailVerified,
-            uid: user.uid);
-        bool response = await _firestoreService.saveUser(responseModel);
-        await _firestoreService.updateUserData(responseModel);
-        if (response) {
-          return responseModel;
+      final serviceResponse = await _authenticationService.login(model);
+      if (serviceResponse.success) {
+        if (!serviceResponse.user.emailVerified) {
+          return AuthenticationServiceResponseModel(
+              success: false,
+              message:
+                  "Your email has not been confirmed. Please confirm your email to login.");
         } else {
-          return null;
+          await _firestoreService.updateUserData(AuthenticationResponseModel(
+              creationTime: serviceResponse.user.metadata.creationTime,
+              lastSignInTime: serviceResponse.user.metadata.lastSignInTime,
+              displayName: serviceResponse.user.displayName,
+              email: serviceResponse.user.email,
+              emailVerified: serviceResponse.user.emailVerified,
+              uid: serviceResponse.user.uid));
+          return serviceResponse;
         }
       } else {
-        return null;
+        return serviceResponse;
       }
     } catch (e) {
       print("authentication repo error:" + e.toString());
@@ -102,12 +63,35 @@ class AuthenticationRepository extends IAuthentication {
   }
 
   @override
-  Future<bool> signOut() async {
+  Future<AuthenticationServiceResponseModel> forgotPassword(
+      ForgotPasswordRequestModel model) async {
     try {
-      return await _authenticationService.signOut();
+      return await _authenticationService.forgotPassword(model);
     } catch (e) {
       print("authentication repo error:" + e.toString());
-      return false;
+      return null;
+    }
+  }
+
+  @override
+  Future<AuthenticationServiceResponseModel> loginWithGoogle() async {
+    try {
+      var serviceResponse = await _authenticationService.loginWithGoogle();
+      if (serviceResponse.success) {
+        final model = AuthenticationResponseModel(
+            creationTime: serviceResponse.user.metadata.creationTime,
+            lastSignInTime: serviceResponse.user.metadata.lastSignInTime,
+            displayName: serviceResponse.user.displayName,
+            email: serviceResponse.user.email,
+            emailVerified: serviceResponse.user.emailVerified,
+            uid: serviceResponse.user.uid);
+        await _firestoreService.saveUser(model);
+        await _firestoreService.updateUserData(model);
+      }
+      return serviceResponse;
+    } catch (e) {
+      print("authentication repo error:" + e.toString());
+      return null;
     }
   }
 }

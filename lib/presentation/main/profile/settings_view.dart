@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:speakmatch_v2/controller/authentication_controller.dart';
+import 'package:speakmatch_v2/core/utilities/delete_user_dialog.dart';
+import 'package:speakmatch_v2/cubit/profile/profile_cubit.dart';
 import 'package:speakmatch_v2/presentation/authentication/authentication_view.dart';
 
 class SettingsView extends StatefulWidget {
@@ -36,7 +39,22 @@ class _SettingsViewState extends State<SettingsView> {
           children: [
             listItems("Contact Us", "Help and Support"),
             listItems("Legal", "Privacy Policy"),
-            signoutAndDeleteButton("Sign Out"),
+            BlocConsumer<ProfileCubit, ProfileState>(
+              listener: (context, state) {
+                if (state is ProfileLoadingState) {
+                  EasyLoading.show(status: "Loading...");
+                } else {
+                  EasyLoading.dismiss();
+                  if (state is SuccessSignOutState) {
+                    Get.offAll(() => AuthenticationView(),
+                        duration: Duration(seconds: 1));
+                  }
+                }
+              },
+              builder: (context, state) {
+                return signoutAndDeleteButton("Sign Out");
+              },
+            ),
             imageAndVersionWidget(),
             signoutAndDeleteButton("Delete Account"),
           ],
@@ -102,6 +120,9 @@ class _SettingsViewState extends State<SettingsView> {
           onPressed: () {
             if (title == "Sign Out") {
               signOut();
+            } else {
+              deleteUserDialog(context.read<ProfileCubit>());
+              //deleteUser();
             }
           },
           style: ElevatedButton.styleFrom(
@@ -128,9 +149,6 @@ class _SettingsViewState extends State<SettingsView> {
   }
 
   void signOut() async {
-    final response = await AuthenticationController().signOut();
-    if (response) {
-      Get.offAll(() => AuthenticationView(), duration: Duration(seconds: 1));
-    }
+    context.read<ProfileCubit>().signOut();
   }
 }
