@@ -6,7 +6,7 @@ import 'package:speakmatch_v2/presentation/splash_view.dart';
 class AppRouter {
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case AppNavigationConstant.splashRoute:
+      case AppConstant.splashRoute:
         //return GetPage(name: "/", page: () => SplashView());
         break;
       default:

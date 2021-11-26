@@ -4,6 +4,14 @@ import 'package:speakmatch_v2/controller/iauthentication.dart';
 import 'package:speakmatch_v2/data/model/authentication/request/authentication_request_model.dart';
 import 'package:speakmatch_v2/data/model/authentication/request/forgot_password_request_model.dart';
 import 'package:speakmatch_v2/data/model/authentication/response/authentication_service_response_model.dart';
+import 'package:speakmatch_v2/data/model/profile/request/delete_user_request_model.dart';
+import 'package:speakmatch_v2/data/model/profile/request/update_email_request_model.dart';
+import 'package:speakmatch_v2/data/model/profile/request/update_password_request_model.dart';
+import 'package:speakmatch_v2/data/model/profile/response/delete_user_response_model.dart';
+import 'package:speakmatch_v2/data/model/profile/response/signout_response_model.dart';
+import 'package:speakmatch_v2/data/model/profile/response/update_email_response_model.dart';
+import 'package:speakmatch_v2/data/model/profile/response/update_passowrd_response_model.dart';
+import 'package:speakmatch_v2/shared-prefs.dart';
 
 class AuthenticationService extends IAuthentication {
   UserCredential _userCredential;
@@ -58,11 +66,77 @@ class AuthenticationService extends IAuthentication {
           accessToken: googleAuth?.accessToken, idToken: googleAuth?.idToken);
       final responseCredential =
           await FirebaseAuth.instance.signInWithCredential(credential);
+      SharedPrefs.saveIdToken(googleAuth.idToken);
+      SharedPrefs.saveAccessToken(googleAuth.accessToken);
       return AuthenticationServiceResponseModel(
           success: true, user: responseCredential.user);
     } on FirebaseAuthException catch (e) {
       return AuthenticationServiceResponseModel(
           success: false, message: e.message);
+    }
+  }
+
+  Future<UpdatePasswordResponseModel> changePassword(
+      UpdatePasswordRequestModel model) async {
+    try {
+      await _firebaseAuth.currentUser.reauthenticateWithCredential(
+          EmailAuthProvider.credential(
+              email: _firebaseAuth.currentUser.email,
+              password: model.oldPassword));
+
+      await _firebaseAuth.currentUser.updatePassword(model.newPassword);
+      return UpdatePasswordResponseModel(success: true);
+    } on FirebaseAuthException catch (e) {
+      return UpdatePasswordResponseModel(success: false, message: e.message);
+    }
+  }
+
+  Future<UpdateEmailResponseModel> changeEmail(
+      UpdateEmailRequestModel model) async {
+    try {
+      await _firebaseAuth.currentUser.reauthenticateWithCredential(
+          EmailAuthProvider.credential(
+              email: _firebaseAuth.currentUser.email,
+              password: model.password));
+
+      await _firebaseAuth.currentUser.updateEmail(model.email);
+      return UpdateEmailResponseModel(success: true);
+    } on FirebaseAuthException catch (e) {
+      return UpdateEmailResponseModel(success: false, message: e.message);
+    }
+  }
+
+  Future<DeleteUserResponseModel> deleteUser(
+      [DeleteUserRequestModel model]) async {
+    try {
+      if (model != null) {
+        await _firebaseAuth.currentUser.reauthenticateWithCredential(
+            EmailAuthProvider.credential(
+                email: _firebaseAuth.currentUser.email,
+                password: model.password));
+      } else {
+        await _firebaseAuth.currentUser.reauthenticateWithCredential(
+            GoogleAuthProvider.credential(
+                idToken: SharedPrefs.getidToken,
+                accessToken: SharedPrefs.getAccessToken));
+      }
+      await _firebaseAuth.currentUser.delete();
+      return DeleteUserResponseModel(success: true);
+    } on FirebaseAuthException catch (e) {
+      return DeleteUserResponseModel(success: false, message: e.message);
+    }
+  }
+
+  Future<SignOutResponseModel> signOut() async {
+    try {
+      if (_firebaseAuth.currentUser != null) {
+        await _googleSignIn.signOut();
+        await _firebaseAuth.signOut();
+      }
+      return SignOutResponseModel(success: true);
+    } on FirebaseAuthException catch (e) {
+      print("profile service error:" + e.toString());
+      return SignOutResponseModel(success: false, message: e.message);
     }
   }
 }

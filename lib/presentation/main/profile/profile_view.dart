@@ -1,6 +1,13 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart' as bloc;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:speakmatch_v2/cubit/profile/profile_cubit.dart';
+import 'package:speakmatch_v2/data/model/authentication/response/authentication_response_model.dart';
+import 'package:speakmatch_v2/presentation/main/profile/components/profile_view_loading_animation_widget.dart';
 import 'package:speakmatch_v2/presentation/main/profile/edit_profile_view.dart';
 import 'package:speakmatch_v2/presentation/main/profile/settings_view.dart';
 
@@ -12,10 +19,15 @@ class ProfileView extends StatefulWidget {
 }
 
 class _ProfileViewState extends State<ProfileView> {
+  UserResponseModel userResponseModel;
   @override
   void initState() {
-    //context.read<SubjectBloc>()
+    getUserData();
     super.initState();
+  }
+
+  void getUserData() async {
+    userResponseModel = await context.read<ProfileCubit>().getUser();
   }
 
   @override
@@ -46,40 +58,55 @@ class _ProfileViewState extends State<ProfileView> {
                   children: [
                     Expanded(
                       flex: 2,
-                      child: Column(
-                        children: [
-                          CircleAvatar(
-                            maxRadius: 70,
-                            backgroundImage: NetworkImage(
-                                "https://randomuser.me/api/portraits/women/65.jpg"),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(vertical: 20),
-                            child: Column(
+                      child: bloc.BlocConsumer<ProfileCubit, ProfileState>(
+                        listener: (contex, state) {
+                          if (state is ProfileLoadedState) {
+                            userResponseModel = state.model;
+                          }
+                        },
+                        builder: (context, state) {
+                          if (state is ProfileLoadedState) {
+                            return Column(
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 5),
-                                  child: Text(
-                                    "Mert Güven",
-                                    style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary,
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.bold),
-                                  ),
+                                CircleAvatar(
+                                  maxRadius: 70,
+                                  backgroundColor: Colors.grey.shade300,
+                                  backgroundImage:
+                                      NetworkImage(state.model.imageUrl),
                                 ),
-                                Text(
-                                  "mertguven789@gmail.com",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.grey.shade400,
+                                Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 20),
+                                  child: Column(
+                                    children: [
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 5),
+                                        child: Text(
+                                          state.model.displayName,
+                                          style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .primary,
+                                              fontSize: 22,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                      Text(
+                                        state.model.email,
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.grey.shade400,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
-                            ),
-                          ),
-                        ],
+                            );
+                          } else {
+                            return ProfileViewLoadingAnimationWidget();
+                          }
+                        },
                       ),
                     ),
                     Expanded(
@@ -170,9 +197,13 @@ class _ProfileViewState extends State<ProfileView> {
     return InkWell(
       onTap: () {
         if (index == 0) {
-          Get.to(() => EditProfileView(), transition: Transition.cupertino);
+          Get.to(() => EditProfileView(userResponseModel),
+              transition: Transition.cupertino);
         } else if (index == 2) {
           Get.to(() => SettingsView(), transition: Transition.cupertino);
+        } else {
+          imagePickerFunction()
+              .then((value) => context.read<ProfileCubit>().uploadPhoto(value));
         }
       },
       child: Column(
@@ -275,5 +306,10 @@ class _ProfileViewState extends State<ProfileView> {
         Icons.keyboard_arrow_right,
       ),
     );
+  }
+
+  Future<Uint8List> imagePickerFunction() async {
+    final file = await ImagePicker().pickImage(source: ImageSource.gallery);
+    return await file.readAsBytes();
   }
 }
