@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart' as bloc;
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:speakmatch_v2/core/utilities/custom_snackbar.dart';
 import 'package:speakmatch_v2/core/utilities/delete_user_dialog.dart';
 import 'package:speakmatch_v2/cubit/profile/profile_cubit.dart';
 import 'package:speakmatch_v2/presentation/authentication/authentication_view.dart';
@@ -39,7 +40,7 @@ class _SettingsViewState extends State<SettingsView> {
           children: [
             listItems("Contact Us", "Help and Support"),
             listItems("Legal", "Privacy Policy"),
-            BlocConsumer<ProfileCubit, ProfileState>(
+            bloc.BlocConsumer<ProfileCubit, ProfileState>(
               listener: (context, state) {
                 if (state is ProfileLoadingState) {
                   EasyLoading.show(status: "Loading...");
@@ -47,7 +48,10 @@ class _SettingsViewState extends State<SettingsView> {
                   EasyLoading.dismiss();
                   if (state is SuccessSignOutState) {
                     Get.offAll(() => AuthenticationView(),
-                        duration: Duration(seconds: 1));
+                        duration: Duration(seconds: 1),
+                        transition: Transition.cupertino);
+                  } else if (state is ProfileErrorState) {
+                    customSnackbar(false, state.errorMessage);
                   }
                 }
               },

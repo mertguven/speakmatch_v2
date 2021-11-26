@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:speakmatch_v2/controller/iauthentication.dart';
 import 'package:speakmatch_v2/data/model/authentication/response/authentication_service_response_model.dart';
 import 'package:speakmatch_v2/data/model/authentication/response/authentication_response_model.dart';
@@ -17,7 +18,9 @@ class AuthenticationRepository extends IAuthentication {
       final serviceResponse = await _authenticationService.signUp(model);
       if (serviceResponse.success) {
         await serviceResponse.user.updateDisplayName(model.name);
-        await _firestoreService.saveUser(AuthenticationResponseModel(
+        await _firestoreService.saveUser(UserResponseModel(
+            imageUrl: serviceResponse.user.photoURL,
+            gender: null,
             creationTime: serviceResponse.user.metadata.creationTime,
             lastSignInTime: serviceResponse.user.metadata.lastSignInTime,
             displayName: model.name,
@@ -39,18 +42,17 @@ class AuthenticationRepository extends IAuthentication {
       final serviceResponse = await _authenticationService.login(model);
       if (serviceResponse.success) {
         if (!serviceResponse.user.emailVerified) {
+          await serviceResponse.user.sendEmailVerification();
           return AuthenticationServiceResponseModel(
               success: false,
               message:
                   "Your email has not been confirmed. Please confirm your email to login.");
         } else {
-          await _firestoreService.updateUserData(AuthenticationResponseModel(
-              creationTime: serviceResponse.user.metadata.creationTime,
-              lastSignInTime: serviceResponse.user.metadata.lastSignInTime,
-              displayName: serviceResponse.user.displayName,
-              email: serviceResponse.user.email,
-              emailVerified: serviceResponse.user.emailVerified,
-              uid: serviceResponse.user.uid));
+          await _firestoreService.updateUserWithMap({
+            'lastSignInTime': Timestamp.fromDate(DateTime.now()),
+            'emailVerified': true,
+            'email': serviceResponse.user.email
+          }, serviceResponse.user.uid);
           return serviceResponse;
         }
       } else {
@@ -78,7 +80,9 @@ class AuthenticationRepository extends IAuthentication {
     try {
       var serviceResponse = await _authenticationService.loginWithGoogle();
       if (serviceResponse.success) {
-        final model = AuthenticationResponseModel(
+        final model = UserResponseModel(
+            imageUrl: serviceResponse.user.photoURL,
+            gender: null,
             creationTime: serviceResponse.user.metadata.creationTime,
             lastSignInTime: serviceResponse.user.metadata.lastSignInTime,
             displayName: serviceResponse.user.displayName,
@@ -86,7 +90,11 @@ class AuthenticationRepository extends IAuthentication {
             emailVerified: serviceResponse.user.emailVerified,
             uid: serviceResponse.user.uid);
         await _firestoreService.saveUser(model);
-        await _firestoreService.updateUserData(model);
+        await _firestoreService.updateUserWithMap({
+          'lastSignInTime': Timestamp.fromDate(DateTime.now()),
+          'emailVerified': true,
+          'email': serviceResponse.user.email
+        }, serviceResponse.user.uid);
       }
       return serviceResponse;
     } catch (e) {

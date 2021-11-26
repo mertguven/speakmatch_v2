@@ -2,6 +2,9 @@ import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:speakmatch_v2/presentation/main/home/call/calling_view.dart';
+import 'package:speakmatch_v2/presentation/main/home/notification_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({Key key}) : super(key: key);
@@ -30,7 +33,9 @@ class _HomeViewState extends State<HomeView> {
       backgroundColor: Theme.of(context).colorScheme.secondary,
       elevation: 0,
       actions: [
-        IconButton(onPressed: () {}, icon: Icon(FontAwesomeIcons.solidBell)),
+        IconButton(
+            onPressed: () => redirect("notification"),
+            icon: Icon(FontAwesomeIcons.solidBell)),
       ],
     );
   }
@@ -84,7 +89,7 @@ class _HomeViewState extends State<HomeView> {
         endRadius: context.width / 3.5,
         duration: Duration(seconds: 3),
         child: InkWell(
-          onTap: () {},
+          onTap: () => redirect("calling"),
           child: Material(
             elevation: 8.0,
             shape: CircleBorder(),
@@ -166,5 +171,15 @@ class _HomeViewState extends State<HomeView> {
         ],
       ),
     );
+  }
+
+  void redirect(String view) {
+    Permission.microphone.request().then((value) {
+      if (value == PermissionStatus.granted) {
+        Get.to(() => view == "calling" ? CallingView() : NotificationView(),
+            transition:
+                view == "calling" ? Transition.fadeIn : Transition.cupertino);
+      }
+    });
   }
 }

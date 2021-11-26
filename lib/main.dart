@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:speakmatch_v2/core/theme/app_theme.dart';
 import 'package:speakmatch_v2/core/utilities/loading_dialog.dart';
 import 'package:speakmatch_v2/cubit/authentication/authentication_cubit.dart';
+import 'package:speakmatch_v2/cubit/home/call/call_cubit.dart';
 import 'package:speakmatch_v2/cubit/profile/profile_cubit.dart';
 import 'package:speakmatch_v2/cubit/sample_bloc_observer.dart';
 import 'package:speakmatch_v2/shared-prefs.dart';
@@ -38,6 +39,7 @@ class _AppState extends State<App> {
       providers: [
         BlocProvider<AuthenticationCubit>(create: (_) => AuthenticationCubit()),
         BlocProvider<ProfileCubit>(create: (_) => ProfileCubit()),
+        BlocProvider<CallCubit>(create: (_) => CallCubit()),
       ],
       child: GetMaterialApp(
         title: 'SpeakMatch',
