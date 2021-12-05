@@ -34,7 +34,11 @@ class SharedPrefs {
     return _prefs.setBool('login', true);
   }
 
-  static bool get getLogin => _prefs.getBool('login') ?? false;
+  static bool get getLogin {
+    print(_prefs.getBool('login'));
+    return _prefs.getBool('login') ?? false;
+  }
+
   static bool get getVisibilityOfProfile =>
       _prefs.getBool('visibilityOfProfile') ?? true;
   static String get getUid => _prefs.getString('uid') ?? null;

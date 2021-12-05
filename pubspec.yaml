@@ -28,7 +28,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.3
-  shared_preferences: ^2.0.8
+  shared_preferences: ^2.0.9
   permission_handler: ^8.2.6
   agora_rtc_engine: ^4.0.7
   dio: ^4.0.1
