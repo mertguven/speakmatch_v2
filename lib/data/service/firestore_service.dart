@@ -87,6 +87,7 @@ class FirestoreService {
           .doc("waiting_room")
           .collection("users")
           .get();
+
       if (response == null || response.size == 0) {
         await _fireStore
             .collection("voice_match")
@@ -97,7 +98,6 @@ class FirestoreService {
       } else {
         if (!(response.docs
             .any((element) => element.id.contains(SharedPrefs.getUid)))) {
-          //buraya test bitince aşağıdaki fonksiyonu yerleştir
           await _fireStore
               .collection("voice_match")
               .doc("meeting_rooms")

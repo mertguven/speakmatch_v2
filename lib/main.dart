@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:speakmatch_v2/core/theme/app_theme.dart';
 import 'package:speakmatch_v2/core/utilities/loading_dialog.dart';
 import 'package:speakmatch_v2/cubit/authentication/authentication_cubit.dart';
@@ -16,6 +17,7 @@ import 'core/theme/app_theme.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = SampleBlocObserver();
+  MobileAds.instance.initialize();
   await SharedPrefs.initialize();
   await Firebase.initializeApp();
   runApp(App());

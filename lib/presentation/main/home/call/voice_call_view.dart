@@ -51,7 +51,6 @@ class VoiceCallView extends StatefulWidget {
 class _VoiceCallViewState extends State<VoiceCallView> {
   Rx<bool> muted = false.obs;
   final _users = <int>[];
-  final _infoStrings = <String>[];
   RtcEngine _engine;
   CountDownController _controller = CountDownController();
   Rx<bool> userJoined = false.obs;
@@ -75,12 +74,6 @@ class _VoiceCallViewState extends State<VoiceCallView> {
 
   Future<void> initialize() async {
     if (AgoraSettings.APP_ID.isEmpty) {
-      setState(() {
-        _infoStrings.add(
-          'APP_ID missing, please provide your APP_ID in settings.dart',
-        );
-        _infoStrings.add('Agora Engine is not starting');
-      });
       return;
     }
 
@@ -99,40 +92,39 @@ class _VoiceCallViewState extends State<VoiceCallView> {
   // Initialize the app
   void _addAgoraEventHandlers() {
     _engine.setEventHandler(RtcEngineEventHandler(error: (code) {
-      setState(() {
-        final info = 'Lütfen kanala tekrar katılın!';
-        //_snackbar(info, Colors.red);
-        _infoStrings.add(info);
-      });
+      print(code);
     }, joinChannelSuccess: (channel, uid, elapsed) {
-      /*setState(() {
-        final info = 'Kanala katıldın.';
-        _snackbar(info, Colors.green);
-        _infoStrings.add(info);
-      });*/
+      print("successful to join the channel");
     }, userOffline: (uid, elapsed) {
-      setState(() {
-        _users.remove(uid);
-        userJoined = false.obs;
-      });
+      userJoined = false.obs;
+      _users.remove(uid);
+      _onCallEnd();
+      _controller.pause();
+      print("2nd user offline");
     }, leaveChannel: (stats) {
-      setState(() {
-        _users.clear();
-        userJoined = false.obs;
-      });
+      userJoined = false.obs;
+      _users.clear();
     }, userJoined: (uid, elapsed) {
-      setState(() {
-        userJoined = true.obs;
-        //_infoStrings.add(info);
-        _users.add(uid);
-      });
+      userJoined.value = true;
+      _users.add(uid);
+      _controller.start();
+      print("2nd user joined");
     }));
   }
 
+  void _onToggleMute() {
+    muted.toggle();
+    _engine.muteLocalAudioStream(muted.value);
+  }
+
   void _onCallEnd() {
-    context.read<CallCubit>().deleteUserAtWaitingRoom().whenComplete(() =>
+    context.read<CallCubit>().removeMeetingRoom().whenComplete(
+          () => Get.offAll(() => PageRouterView(),
+              transition: Transition.noTransition),
+        );
+    /*context.read<CallCubit>().deleteUserAtWaitingRoom().whenComplete(() =>
         Get.offAll(() => PageRouterView(),
-            transition: Transition.noTransition));
+            transition: Transition.noTransition));*/
   }
 
   @override
@@ -217,90 +209,34 @@ class _VoiceCallViewState extends State<VoiceCallView> {
                     fontWeight: FontWeight.bold,
                     letterSpacing: 0.5),
               ),
+              Obx(() => Text(
+                    userJoined.value ? "Online" : "Offline",
+                    style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.bold),
+                  )),
             ],
           ),
           Spacer(flex: 2),
           CircularCountDownTimer(
-            duration: 600,
-            initialDuration: 0,
-            controller: _controller,
+            onComplete: () => _onCallEnd(),
+            duration: 60,
+            autoStart: false,
             isReverse: true,
+            controller: _controller,
             ringColor: Colors.white54,
-            ringGradient: null,
             fillColor: Theme.of(context).colorScheme.primary,
             backgroundColor: Colors.white,
             strokeWidth: 20.0,
+            textFormat: CountdownTextFormat.S,
             strokeCap: StrokeCap.round,
-            onComplete: () => _onCallEnd(),
-            height: MediaQuery.of(context).size.height / 4,
-            width: MediaQuery.of(context).size.width / 2,
+            height: context.height / 4,
+            width: context.width / 2,
             textStyle: TextStyle(
                 color: Theme.of(context).colorScheme.primary,
                 fontSize: 40,
                 fontWeight: FontWeight.w600),
           ),
-          /*Stack(
-            alignment: Alignment.center,
-            children: [
-              CircleAvatar(
-                radius: MediaQuery.of(context).size.width / 3,
-                backgroundColor: Colors.white.withOpacity(0.05),
-              ),
-              CircleAvatar(
-                radius: MediaQuery.of(context).size.width / 3.5,
-                backgroundColor: Colors.white.withOpacity(0.15),
-              ),
-              CircleAvatar(
-                radius: MediaQuery.of(context).size.width / 4,
-                backgroundColor: Colors.white.withOpacity(0.25),
-              ),
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  CircularCountDownTimer(
-                    duration: 60,
-                    initialDuration: 0,
-                    controller: _controller,
-                    isReverse: true,
-                    onComplete: () => _onCallEnd(),
-                    fillColor: Colors.white,
-                    backgroundColor: Colors.white,
-                    height: MediaQuery.of(context).size.height / 4,
-                    ringColor: Colors.transparent,
-                    width: MediaQuery.of(context).size.width / 2,
-                    textStyle: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
-                        fontSize: 40,
-                        fontWeight: FontWeight.w600),
-                  ),
-                  /*Visibility(
-                    visible: isfreeze ? true : false,
-                    child: Center(
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-                        child: Container(
-                          width: MediaQuery.of(context).size.width / 2.4,
-                          height: MediaQuery.of(context).size.height / 4.4,
-                          decoration: new BoxDecoration(
-                            color: Colors.grey.shade200.withOpacity(0.5),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Center(
-                              child: Text(
-                            "+" + "$_freezeCounterTimer",
-                            style: TextStyle(
-                                color: Colors.cyan,
-                                fontSize: 40,
-                                fontWeight: FontWeight.w600),
-                          )),
-                        ),
-                      ),
-                    ),
-                  ),*/
-                ],
-              ),
-            ],
-          ),*/
           Spacer(flex: 6),
         ],
       ),
@@ -312,84 +248,42 @@ class _VoiceCallViewState extends State<VoiceCallView> {
     return Container(
       alignment: Alignment.bottomCenter,
       padding: const EdgeInsets.symmetric(vertical: 48),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              RawMaterialButton(
-                onPressed: () {},
-                child: Icon(
-                  FontAwesomeIcons.plus,
-                  color: Theme.of(context).colorScheme.primary,
-                  size: 35.0,
-                ),
-                elevation: 10,
-                shape: CircleBorder(),
-                fillColor: Theme.of(context).primaryColor,
-                padding: const EdgeInsets.all(12.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Obx(
+            () => RawMaterialButton(
+              onPressed: _onToggleMute,
+              child: Icon(
+                muted.value ? Icons.mic_off : Icons.mic,
+                color: muted.value
+                    ? Colors.white
+                    : Theme.of(context).colorScheme.primary,
+                size: 35.0,
               ),
-              RawMaterialButton(
-                onPressed: _onToggleMute,
-                child: Icon(
-                  muted.value ? Icons.mic_off : Icons.mic,
-                  color: muted.value
-                      ? Colors.white
-                      : Theme.of(context).colorScheme.primary,
-                  size: 35.0,
-                ),
-                shape: CircleBorder(),
-                elevation: 10,
-                fillColor: muted.value
-                    ? Theme.of(context).colorScheme.primary
-                    : Colors.white,
-                padding: const EdgeInsets.all(12.0),
-              ),
-              RawMaterialButton(
-                onPressed: () {},
-                child: Icon(
-                  FontAwesomeIcons.stopwatch,
-                  color: Theme.of(context).colorScheme.primary,
-                  size: 35.0,
-                ),
-                elevation: 10,
-                shape: CircleBorder(),
-                fillColor: Theme.of(context).primaryColor,
-                padding: const EdgeInsets.all(12.0),
-              ),
-            ],
+              shape: CircleBorder(),
+              elevation: 10,
+              fillColor: muted.value
+                  ? Theme.of(context).colorScheme.primary
+                  : Colors.white,
+              padding: const EdgeInsets.all(12.0),
+            ),
           ),
-          SizedBox(height: 20),
-          FractionallySizedBox(
-            widthFactor: 0.7,
-            child: ElevatedButton(
-                onPressed: () => _onCallEnd(),
-                style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(vertical: 15),
-                    primary: Theme.of(context).colorScheme.primary,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15)),
-                    shadowColor:
-                        Theme.of(context).colorScheme.primary.withOpacity(0.5),
-                    elevation: 10),
-                child: Text(
-                  "Exit",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    letterSpacing: 1,
-                  ),
-                )),
+          RawMaterialButton(
+            onPressed: () => _onCallEnd(),
+            child: Icon(
+              FontAwesomeIcons.phone,
+              color: Theme.of(context).colorScheme.secondary,
+              size: 35.0,
+            ),
+            elevation: 10,
+            shape: CircleBorder(),
+            fillColor: Theme.of(context).primaryColor,
+            padding: const EdgeInsets.all(12.0),
           ),
         ],
       ),
     );
-  }
-
-  void _onToggleMute() {
-    muted.toggle();
-    _engine.muteLocalAudioStream(muted.value);
   }
 }

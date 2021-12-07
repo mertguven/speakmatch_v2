@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:speakmatch_v2/core/utilities/ad_view.dart';
 import 'package:speakmatch_v2/presentation/main/home/call/calling_view.dart';
 import 'package:speakmatch_v2/presentation/main/home/notification_view.dart';
+import 'package:speakmatch_v2/shared-prefs.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({Key key}) : super(key: key);
@@ -14,7 +16,14 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  bool closeAds = false;
+  Rx<bool> _adsStatus = true.obs;
+
+  @override
+  void initState() {
+    _adsStatus.value = SharedPrefs.getAdStatus;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +43,7 @@ class _HomeViewState extends State<HomeView> {
       elevation: 0,
       actions: [
         IconButton(
-            onPressed: () => redirect("notification"),
+            onPressed: () => _redirectNotificationView,
             icon: Icon(FontAwesomeIcons.solidBell)),
       ],
     );
@@ -89,7 +98,7 @@ class _HomeViewState extends State<HomeView> {
         endRadius: context.width / 3.5,
         duration: Duration(seconds: 3),
         child: InkWell(
-          onTap: () => redirect("calling"),
+          onTap: () => _callMethod,
           child: Material(
             elevation: 8.0,
             shape: CircleBorder(),
@@ -115,14 +124,14 @@ class _HomeViewState extends State<HomeView> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _turnOffAdContainer(context),
-              _getSpeakmatchVIPButton(context),
+              _adStatusContainer(),
+              _getSpeakmatchVIPButton(),
             ],
           ),
         ));
   }
 
-  Container _turnOffAdContainer(BuildContext context) {
+  Container _adStatusContainer() {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 50),
       child: Column(
@@ -132,20 +141,19 @@ class _HomeViewState extends State<HomeView> {
             FontAwesomeIcons.ad,
             color: Theme.of(context).colorScheme.primary,
           ),
-          Text(
-            "Turn off ads",
-            style: TextStyle(
-              fontWeight: FontWeight.w500,
+          Obx(
+            () => Text(
+              _adsStatus.value ? "Ads On" : "Ads Off",
+              style: TextStyle(fontWeight: FontWeight.w500),
             ),
           ),
           Switch(
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            value: closeAds,
+            value: _adsStatus.value,
             activeColor: Theme.of(context).colorScheme.primary,
             onChanged: (change) {
-              setState(() {
-                closeAds = !closeAds;
-              });
+              _adsStatus.toggle();
+              SharedPrefs.changeAdStatus();
             },
           ),
         ],
@@ -153,10 +161,10 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  GestureDetector _getSpeakmatchVIPButton(BuildContext context) {
+  GestureDetector _getSpeakmatchVIPButton() {
     return GestureDetector(
       onTap: () {
-        print("basıldı");
+        print("pressed");
       },
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -173,12 +181,18 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  void redirect(String view) {
+  void _redirectNotificationView() {
+    Get.to(() => NotificationView(), transition: Transition.cupertino);
+  }
+
+  void _callMethod() {
     Permission.microphone.request().then((value) {
       if (value == PermissionStatus.granted) {
-        Get.to(() => view == "calling" ? CallingView() : NotificationView(),
-            transition:
-                view == "calling" ? Transition.fadeIn : Transition.cupertino);
+        if (SharedPrefs.getAdStatus) {
+          AdView().loadInterstitialAd(CallingView());
+        } else {
+          Get.to(() => CallingView(), transition: Transition.fadeIn);
+        }
       }
     });
   }

@@ -38,6 +38,7 @@ dependencies:
   cloud_firestore: ^2.5.3
   google_sign_in: ^5.1.1
   firebase_storage: ^10.0.5
+  firebase_messaging: ^11.2.0
   # presentation packages
   google_fonts: ^2.1.0
   get: ^4.3.8
@@ -52,6 +53,7 @@ dependencies:
   wakelock: ^0.5.6
   # state management package
   flutter_bloc: ^7.3.3
+  google_mobile_ads: ^1.0.1
 
 dev_dependencies:
   flutter_test:

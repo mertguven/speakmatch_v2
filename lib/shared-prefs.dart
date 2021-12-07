@@ -10,34 +10,26 @@ class SharedPrefs {
     }
   }
 
-  static Future<void> saveUid(String uid) async {
-    return _prefs.setString('uid', uid);
-  }
+  static Future<void> saveUid(String uid) async => _prefs.setString('uid', uid);
 
-  static Future<void> saveIdToken(String idToken) async {
-    return _prefs.setString('idToken', idToken);
-  }
+  static Future<void> saveIdToken(String idToken) async =>
+      _prefs.setString('idToken', idToken);
 
-  static Future<void> saveAccessToken(String accessToken) async {
-    return _prefs.setString('accessToken', accessToken);
-  }
+  static Future<void> saveAccessToken(String accessToken) async =>
+      _prefs.setString('accessToken', accessToken);
 
-  static Future<void> saveVisibilityOfProfile(bool visibility) async {
-    return _prefs.setBool("visibilityOfProfile", visibility);
-  }
+  static Future<void> saveVisibilityOfProfile(bool visibility) async =>
+      _prefs.setBool("visibilityOfProfile", visibility);
 
-  static Future<void> sharedClear() async {
-    return _prefs.clear();
-  }
+  static Future<void> sharedClear() async => _prefs.clear();
 
-  static Future<void> login() async {
-    return _prefs.setBool('login', true);
-  }
+  static Future<void> login() async => _prefs.setBool('login', true);
 
-  static bool get getLogin {
-    print(_prefs.getBool('login'));
-    return _prefs.getBool('login') ?? false;
-  }
+  static bool get getLogin => _prefs.getBool('login') ?? false;
+
+  static Future<void> changeAdStatus() async =>
+      _prefs.setBool("adStatus", !getAdStatus);
+  static bool get getAdStatus => _prefs.getBool("adStatus") ?? true;
 
   static bool get getVisibilityOfProfile =>
       _prefs.getBool('visibilityOfProfile') ?? true;
