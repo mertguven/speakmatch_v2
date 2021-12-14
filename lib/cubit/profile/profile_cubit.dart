@@ -28,6 +28,9 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
+  Future<bool> changeVipStatus() async =>
+      await _profileController.changeVipStatus();
+
   Future<void> changeUserInformation(UserResponseModel model) async {
     emit(ProfileLoadingState());
     final response = await _profileController.changeUserInformation(model);

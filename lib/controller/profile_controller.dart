@@ -60,6 +60,9 @@ class ProfileController {
     }
   }
 
+  Future<bool> changeVipStatus() async =>
+      await _profileRepository.changeVipStatus();
+
   Future<bool> uploadPhoto(Uint8List photo) async {
     try {
       return await _profileRepository.uploadPhoto(photo);

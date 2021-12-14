@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 
-void customDialog(
-    {BuildContext context,
-    String content,
+void customDialog(BuildContext context,
+    {String content,
     VoidCallback onPressed,
     String buttonText,
     String title,
+    String lottiePath,
     Image image}) {
   Get.dialog(
       AlertDialog(
@@ -20,8 +21,12 @@ void customDialog(
               borderRadius: BorderRadius.circular(50),
               color: Theme.of(context).primaryColor),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              image,
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: image ?? LottieBuilder.asset(lottiePath),
+              ),
               Text(
                 title,
                 textAlign: TextAlign.center,

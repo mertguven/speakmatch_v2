@@ -10,7 +10,7 @@ import 'package:speakmatch_v2/core/utilities/custom_snackbar.dart';
 import 'package:speakmatch_v2/cubit/authentication/authentication_cubit.dart';
 import 'package:speakmatch_v2/data/model/authentication/request/forgot_password_request_model.dart';
 import 'package:speakmatch_v2/presentation/authentication/authentication_view.dart';
-import 'package:speakmatch_v2/presentation/authentication/components/custom_divider.dart';
+import 'package:speakmatch_v2/core/utilities/custom_divider.dart';
 
 class ForgotPasswordView extends StatefulWidget {
   const ForgotPasswordView({Key key}) : super(key: key);
@@ -34,8 +34,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
   }
 
   void successForgotPasswordDialog() {
-    customDialog(
-        context: context,
+    customDialog(context,
         content: "Password reset email has been sent to your email.",
         onPressed: () => Get.offAll(AuthenticationView(),
             transition: Transition.leftToRightWithFade),

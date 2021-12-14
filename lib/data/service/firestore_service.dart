@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:speakmatch_v2/data/model/authentication/response/authentication_response_model.dart';
+import 'package:speakmatch_v2/data/model/home/notification_model.dart';
 import 'package:speakmatch_v2/data/model/profile/response/delete_user_response_model.dart';
 import 'package:speakmatch_v2/shared-prefs.dart';
 
@@ -12,9 +13,26 @@ class FirestoreService {
     try {
       DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await _fireStore
           .collection("users")
-          .doc(userUid == null ? SharedPrefs.getUid : userUid)
+          .doc(userUid ?? SharedPrefs.getUid)
           .get();
       return documentSnapshot;
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
+
+  Future<void> saveNotification(NotificationModel model) async {
+    try {
+      await _fireStore.collection("notifications").add(model.toJson());
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<QuerySnapshot<Map<String, dynamic>>> getNotifications() async {
+    try {
+      return await _fireStore.collection("notifications").get();
     } catch (e) {
       print(e.toString());
       return null;

@@ -35,6 +35,9 @@ class ProfileRepository {
     }
   }
 
+  Future<bool> changeVipStatus() async =>
+      await _firestoreService.updateUserWithMap({'isVip': true});
+
   Future<UpdateEmailResponseModel> changeEmail(
       UpdateEmailRequestModel model) async {
     try {
@@ -72,21 +75,6 @@ class ProfileRepository {
         return await _firestoreService
             .updateUserWithMap({'imageUrl': '$response'});
       }
-      /*currentUser().then((value) async {
-        final response =
-            await _firebaseStorageService.uploadImage(photo, value);
-        if (response != null) {
-          await _firestoreService.updateUserData(UserResponseModel(
-              uid: value.uid,
-              creationTime: value.creationTime,
-              lastSignInTime: value.lastSignInTime,
-              displayName: value.displayName,
-              email: value.email,
-              emailVerified: value.emailVerified,
-              imageUrl: response));
-          return true;
-        }
-      });*/
       return false;
     } catch (e) {
       print("profile repository error: " + e.toString());

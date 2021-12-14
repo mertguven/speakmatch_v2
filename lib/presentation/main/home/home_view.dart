@@ -3,9 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter_bloc/flutter_bloc.dart' as bloc;
 import 'package:speakmatch_v2/core/utilities/ad_view.dart';
+import 'package:speakmatch_v2/core/utilities/custom_dialog.dart';
+import 'package:speakmatch_v2/cubit/home/home_cubit.dart';
 import 'package:speakmatch_v2/presentation/main/home/call/calling_view.dart';
-import 'package:speakmatch_v2/presentation/main/home/notification_view.dart';
+import 'package:speakmatch_v2/presentation/main/home/notification/notification_view.dart';
+import 'package:speakmatch_v2/presentation/main/page_router_view.dart';
 import 'package:speakmatch_v2/shared-prefs.dart';
 
 class HomeView extends StatefulWidget {
@@ -20,7 +24,7 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   void initState() {
-    _adsStatus.value = SharedPrefs.getAdStatus;
+    _adsStatus.value = SharedPrefs.getAdStatus ?? true;
     super.initState();
   }
 
@@ -43,7 +47,7 @@ class _HomeViewState extends State<HomeView> {
       elevation: 0,
       actions: [
         IconButton(
-            onPressed: () => _redirectNotificationView,
+            onPressed: () => _redirectNotificationView(),
             icon: Icon(FontAwesomeIcons.solidBell)),
       ],
     );
@@ -98,7 +102,7 @@ class _HomeViewState extends State<HomeView> {
         endRadius: context.width / 3.5,
         duration: Duration(seconds: 3),
         child: InkWell(
-          onTap: () => _callMethod,
+          onTap: () => _callMethod(),
           child: Material(
             elevation: 8.0,
             shape: CircleBorder(),
@@ -134,38 +138,34 @@ class _HomeViewState extends State<HomeView> {
   Container _adStatusContainer() {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 50),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            FontAwesomeIcons.ad,
-            color: Theme.of(context).colorScheme.primary,
-          ),
-          Obx(
-            () => Text(
+      child: Obx(
+        () => Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              FontAwesomeIcons.ad,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            Text(
               _adsStatus.value ? "Ads On" : "Ads Off",
               style: TextStyle(fontWeight: FontWeight.w500),
             ),
-          ),
-          Switch(
-            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            value: _adsStatus.value,
-            activeColor: Theme.of(context).colorScheme.primary,
-            onChanged: (change) {
-              _adsStatus.toggle();
-              SharedPrefs.changeAdStatus();
-            },
-          ),
-        ],
+            Switch(
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              value: _adsStatus.value,
+              activeColor: Theme.of(context).colorScheme.primary,
+              onChanged: (change) => changeAdStatus(),
+            ),
+          ],
+        ),
       ),
     );
   }
 
   GestureDetector _getSpeakmatchVIPButton() {
     return GestureDetector(
-      onTap: () {
-        print("pressed");
-      },
+      onTap: () => Get.offAll(() => PageRouterView(pageToShow: 0),
+          transition: Transition.leftToRightWithFade),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -195,5 +195,23 @@ class _HomeViewState extends State<HomeView> {
         }
       }
     });
+  }
+
+  Future<void> changeAdStatus() async {
+    final user = await context.read<HomeCubit>().getUser();
+    if (user.isVip) {
+      _adsStatus.toggle();
+      SharedPrefs.changeAdStatus();
+    } else {
+      customDialog(
+        context,
+        lottiePath: "assets/animations/go_premium_now.json",
+        onPressed: () => Get.offAll(() => PageRouterView(pageToShow: 0),
+            transition: Transition.leftToRightWithFade),
+        buttonText: "Upgrade",
+        title: "VIP Membership Required",
+        content: "You must have a VIP membership to be able to turn off ads",
+      );
+    }
   }
 }

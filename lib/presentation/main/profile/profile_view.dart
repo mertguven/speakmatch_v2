@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:speakmatch_v2/cubit/profile/profile_cubit.dart';
 import 'package:speakmatch_v2/data/model/authentication/response/authentication_response_model.dart';
+import 'package:speakmatch_v2/presentation/main/page_router_view.dart';
 import 'package:speakmatch_v2/presentation/main/profile/components/profile_view_loading_animation_widget.dart';
 import 'package:speakmatch_v2/presentation/main/profile/edit_profile_view.dart';
 import 'package:speakmatch_v2/presentation/main/profile/settings_view.dart';
@@ -170,7 +171,9 @@ class _ProfileViewState extends State<ProfileView> {
                       Container(
                         width: context.width * 0.6,
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () => Get.offAll(
+                              () => PageRouterView(pageToShow: 0),
+                              transition: Transition.leftToRightWithFade),
                           style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 20),
                               shape: StadiumBorder(),
@@ -281,7 +284,6 @@ class _ProfileViewState extends State<ProfileView> {
                       ? "Contact us"
                       : "Privacy Policy",
           style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18)),
-      //subtitle: Text("@56asw121s"),
       onTap: () {},
       leading: Container(
         decoration: BoxDecoration(

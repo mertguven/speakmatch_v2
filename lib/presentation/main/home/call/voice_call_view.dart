@@ -27,7 +27,7 @@ import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:provider/src/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart' as bloc;
 import 'package:speakmatch_v2/cubit/home/call/call_cubit.dart';
 import 'package:speakmatch_v2/data/model/authentication/response/authentication_response_model.dart';
 import 'package:speakmatch_v2/presentation/main/home/call/agora_settings.dart';

@@ -17,7 +17,7 @@ import 'package:speakmatch_v2/presentation/authentication/forgot_password_view.d
 import 'package:speakmatch_v2/presentation/main/page_router_view.dart';
 
 import 'components/custom_authentication_textfield.dart';
-import 'components/custom_divider.dart';
+import '../../core/utilities/custom_divider.dart';
 import 'components/google_button.dart';
 import 'components/login_signUp_button.dart';
 
@@ -94,14 +94,13 @@ class _AuthenticationViewState extends State<AuthenticationView>
             } else if (state is AuthenticationLoginOrGoogleUnsuccessfulState) {
               customSnackbar(false, state.errorMessage);
             } else if (state is AuthenticationSignupSuccessfulState) {
-              customDialog(
-                  context: context,
+              customDialog(context,
                   content:
                       "Verification email has been sent. Please confirm your email.",
                   onPressed: () {
-                    Get.back();
-                    _tabController.animateTo(0, curve: Curves.easeInOutBack);
-                  },
+                Get.back();
+                _tabController.animateTo(0, curve: Curves.easeInOutBack);
+              },
                   buttonText: "Got it",
                   title: "Email has been sent",
                   image: Image.asset("assets/images/sent_email.png"));

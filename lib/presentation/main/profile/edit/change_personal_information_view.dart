@@ -133,6 +133,7 @@ class _ChangePersonalInformationViewState
       try {
         context.read<ProfileCubit>().changeUserInformation(UserResponseModel(
             uid: widget.userResponseModel.uid,
+            isVip: widget.userResponseModel.isVip,
             creationTime: widget.userResponseModel.creationTime,
             displayName: _textEditingController.text.trim(),
             email: widget.userResponseModel.email,

@@ -9,6 +9,7 @@ class UserResponseModel {
   String gender;
   String uid;
   String imageUrl;
+  bool isVip;
 
   UserResponseModel(
       {this.displayName,
@@ -18,7 +19,8 @@ class UserResponseModel {
       this.creationTime,
       this.lastSignInTime,
       this.uid,
-      this.imageUrl});
+      this.imageUrl,
+      this.isVip});
 
   UserResponseModel.fromJson(Map<String, dynamic> json) {
     displayName = json['displayName'];
@@ -27,10 +29,9 @@ class UserResponseModel {
     gender = json['gender'];
     emailVerified = json['emailVerified'];
     creationTime = (json['creationTime'] as Timestamp).toDate();
-    // DateTime.parse(json['creationTime'].toString());
     lastSignInTime = (json['lastSignInTime'] as Timestamp).toDate();
-    // DateTime.parse(json['lastSignInTime'].toString());
     uid = json['uid'];
+    isVip = json['isVip'] ?? false;
   }
 
   Map<String, dynamic> toJson() {
@@ -44,6 +45,7 @@ class UserResponseModel {
     data['email'] = this.email;
     data['gender'] = this.gender;
     data['emailVerified'] = this.emailVerified;
+    data['isVip'] = this.isVip;
     return data;
   }
 }
