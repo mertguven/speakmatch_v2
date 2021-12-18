@@ -1,20 +1,8 @@
 name: speakmatch_v2
 description: A new Flutter project.
 
-# The following line prevents the package from being accidentally published to
-# pub.dev using `pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-# The following defines the version and build number for your application.
-# A version number is three numbers separated by dots, like 1.2.43
-# followed by an optional build number separated by a +.
-# Both the version and the builder number may be overridden in flutter
-# build by specifying --build-name and --build-number, respectively.
-# In Android, build-name is used as versionName while build-number used as versionCode.
-# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
-# In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
-# Read more about iOS versioning at
-# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 version: 1.0.3+8
 
 environment:
@@ -24,25 +12,28 @@ dependencies:
   flutter:
     sdk: flutter
 
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.3
-  shared_preferences: ^2.0.9
-  permission_handler: ^8.2.6
-  agora_rtc_engine: ^4.0.7
-  dio: ^4.0.1
+  # core utilities package
   url_launcher: ^6.0.17
-  # firebase packages
+  permission_handler: ^8.2.6
+  wakelock: ^0.5.6
+  share_plus: ^3.0.4
+  # database package
+  shared_preferences: ^2.0.9
+  # voice call package
+  agora_rtc_engine: ^4.0.7
+  # network package
+  dio: ^4.0.1
+  # auth firebase packages
   firebase_auth: ^3.1.3
+  google_sign_in: ^5.1.1
+  # firebase packages
   firebase_core: ^1.7.0
   cloud_firestore: ^2.5.3
-  google_sign_in: ^5.1.1
   firebase_storage: ^10.0.5
   firebase_messaging: ^11.2.0
   # presentation packages
+  cupertino_icons: ^1.0.3
   google_fonts: ^2.1.0
-  get: ^4.3.8
   font_awesome_flutter: ^9.1.0
   avatar_glow: ^2.0.1
   flutter_easyloading: ^3.0.3
@@ -50,28 +41,22 @@ dependencies:
   image_picker: ^0.8.4+3
   lottie: ^1.2.1
   circular_countdown_timer: ^0.2.0
-  wakelock: ^0.5.6
   # state management package
   flutter_bloc: ^7.3.3
-  google_mobile_ads: ^1.0.1
+  get: ^4.3.8
+  # purchase package
   in_app_purchase: ^2.0.0
+  # google ads package
+  google_mobile_ads: ^1.0.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-# For information on the generic Dart part of this file, see the
-# following page: https://dart.dev/tools/pub/pubspec
-
-# The following section is specific to Flutter.
 flutter:
 
-  # The following line ensures that the Material Icons font is
-  # included with your application, so that you can use the icons in
-  # the material Icons class.
   uses-material-design: true
 
-  # To add assets to your application, add an assets section, like this:
   assets:
     - assets/animations/
     - assets/images/

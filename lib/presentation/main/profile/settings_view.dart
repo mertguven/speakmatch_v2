@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart' as bloc;
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:speakmatch_v2/core/constants/app_constant.dart';
 import 'package:speakmatch_v2/core/helper/url_launcher_helper.dart';
 import 'package:speakmatch_v2/core/utilities/custom_snackbar.dart';
@@ -42,6 +43,7 @@ class _SettingsViewState extends State<SettingsView> {
           children: [
             listItems("Contact Us", "Help and Support"),
             listItems("Legal", "Privacy Policy"),
+            listItems("Share", "Invite Your Friends"),
             bloc.BlocConsumer<ProfileCubit, ProfileState>(
               listener: (context, state) {
                 if (state is ProfileLoadingState) {
@@ -94,8 +96,11 @@ class _SettingsViewState extends State<SettingsView> {
               onTap: () {
                 if (title == "Contact Us") {
                   UrlLauncherHelper().emailSender();
-                } else {
+                } else if (title == "Legal") {
                   UrlLauncherHelper().launcher(AppConstant.privacyPolicyUrl);
+                } else {
+                  Share.share(
+                      "${AppConstant.shareTextContent} ${AppConstant.googlePlayUrl}");
                 }
               },
               title: Text(buttonTitle),
