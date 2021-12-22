@@ -32,6 +32,7 @@ import 'package:speakmatch_v2/cubit/home/call/call_cubit.dart';
 import 'package:speakmatch_v2/data/model/authentication/response/authentication_response_model.dart';
 import 'package:speakmatch_v2/presentation/main/home/call/agora_settings.dart';
 import 'package:speakmatch_v2/presentation/main/page_router_view.dart';
+import 'package:speakmatch_v2/shared-prefs.dart';
 import 'package:wakelock/wakelock.dart';
 
 class VoiceCallView extends StatefulWidget {
@@ -54,6 +55,8 @@ class _VoiceCallViewState extends State<VoiceCallView> {
   RtcEngine _engine;
   CountDownController _controller = CountDownController();
   Rx<bool> userJoined = false.obs;
+  String _defaultUserImageNetworkUrl =
+      "https://firebasestorage.googleapis.com/v0/b/speakmatch-30ca9.appspot.com/o/user.png?alt=media&token=6c742266-21ba-4dab-b30e-086152cdaa08";
 
   @override
   void dispose() {
@@ -198,7 +201,10 @@ class _VoiceCallViewState extends State<VoiceCallView> {
                 child: CircleAvatar(
                   radius: 30,
                   backgroundColor: Colors.grey.shade300,
-                  backgroundImage: NetworkImage(widget.matchedUser.imageUrl),
+                  backgroundImage: NetworkImage(
+                      SharedPrefs.getProfileDisplayStatus
+                          ? widget.matchedUser.imageUrl
+                          : _defaultUserImageNetworkUrl),
                 ),
               ),
               Text(

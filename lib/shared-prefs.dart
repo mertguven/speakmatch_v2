@@ -31,6 +31,11 @@ class SharedPrefs {
       _prefs.setBool("adStatus", !getAdStatus);
   static bool get getAdStatus => _prefs.getBool("adStatus") ?? true;
 
+  static Future<void> changeProfileDisplayStatus() async =>
+      _prefs.setBool("profileDisplayStatus", !getProfileDisplayStatus);
+  static bool get getProfileDisplayStatus =>
+      _prefs.getBool("profileDisplayStatus") ?? true;
+
   static bool get getVisibilityOfProfile =>
       _prefs.getBool('visibilityOfProfile') ?? true;
   static String get getUid => _prefs.getString('uid') ?? null;

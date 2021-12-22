@@ -21,10 +21,12 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   Rx<bool> _adsStatus = true.obs;
+  Rx<bool> _profileDisplayStatus = true.obs;
 
   @override
   void initState() {
-    _adsStatus.value = SharedPrefs.getAdStatus ?? true;
+    _adsStatus.value = SharedPrefs.getAdStatus;
+    _profileDisplayStatus.value = SharedPrefs.getProfileDisplayStatus;
     super.initState();
   }
 
@@ -129,7 +131,7 @@ class _HomeViewState extends State<HomeView> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               _adStatusContainer(),
-              _getSpeakmatchVIPButton(),
+              _hideProfileContainer(),
             ],
           ),
         ));
@@ -150,7 +152,7 @@ class _HomeViewState extends State<HomeView> {
               _adsStatus.value ? "Ads On" : "Ads Off",
               style: TextStyle(fontWeight: FontWeight.w500),
             ),
-            Switch(
+            Switch.adaptive(
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               value: _adsStatus.value,
               activeColor: Theme.of(context).colorScheme.primary,
@@ -162,21 +164,29 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  GestureDetector _getSpeakmatchVIPButton() {
-    return GestureDetector(
-      onTap: () => Get.offAll(() => PageRouterView(pageToShow: 0),
-          transition: Transition.leftToRightWithFade),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            FontAwesomeIcons.solidGem,
-            color: Theme.of(context).colorScheme.primary,
-          ),
-          Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: Text("Get Speakmatch VIP")),
-        ],
+  Container _hideProfileContainer() {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 50),
+      child: Obx(
+        () => Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              FontAwesomeIcons.shieldAlt,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            Text(
+              _profileDisplayStatus.value ? "Show Profile" : "Hide Profile",
+              style: TextStyle(fontWeight: FontWeight.w500),
+            ),
+            Switch.adaptive(
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              value: _profileDisplayStatus.value,
+              activeColor: Theme.of(context).colorScheme.primary,
+              onChanged: (change) => changeProfileDisplayStatus(),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -213,5 +223,10 @@ class _HomeViewState extends State<HomeView> {
         content: "You must have a VIP membership to be able to turn off ads",
       );
     }
+  }
+
+  Future<void> changeProfileDisplayStatus() async {
+    _adsStatus.toggle();
+    SharedPrefs.changeProfileDisplayStatus();
   }
 }

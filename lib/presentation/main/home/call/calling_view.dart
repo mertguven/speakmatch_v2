@@ -72,42 +72,6 @@ class _CallingViewState extends State<CallingView> {
                   }
                 }
               }
-              /*if (snapshot.hasData &&
-                  snapshot.data.docs.length > 0 &&
-                  snapshot.data.docs.any((element) {
-                    if (element.id.contains(SharedPrefs.getUid)) {
-                      _roomName = element.id;
-                      for (var user in _roomName.split("-")) {
-                        if (!user.contains(SharedPrefs.getUid)) {
-                          context
-                              .read<CallCubit>()
-                              .getMatchingUsersInfo(user)
-                              .then((value) => _matchedUserResponseModel = value);
-                        }
-                      }
-                      return true;
-                    } else {
-                      return false;
-                    }
-                  })) {
-                deleteUserAtWaitingRoom().whenComplete(() {
-                  Timer(
-                      Duration(seconds: 2),
-                      () => Get.offAll(
-                          () => MatchedView(
-                              matchedUser: _matchedUserResponseModel,
-                              roomName: _roomName),
-                          transition: Transition.noTransition));
-    
-                  /*Future.delayed(
-                      Duration(seconds: 2),
-                      () => Get.offAll(
-                          () => MatchedView(
-                              matchedUser: _matchedUserResponseModel,
-                              roomName: _roomName),
-                          transition: Transition.noTransition));*/
-                });
-              }*/
               return callingWidget();
             },
           ),
