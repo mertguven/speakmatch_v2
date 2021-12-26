@@ -38,7 +38,7 @@ class _SettingsViewState extends State<SettingsView> {
         backgroundColor: Theme.of(context).primaryColor,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Column(
           children: [
             listItems("Contact Us", "Help and Support"),

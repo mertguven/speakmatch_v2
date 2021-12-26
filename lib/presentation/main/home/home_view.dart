@@ -226,7 +226,7 @@ class _HomeViewState extends State<HomeView> {
   }
 
   Future<void> changeProfileDisplayStatus() async {
-    _adsStatus.toggle();
+    _profileDisplayStatus.toggle();
     SharedPrefs.changeProfileDisplayStatus();
   }
 }
