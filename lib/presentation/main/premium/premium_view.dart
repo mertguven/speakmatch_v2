@@ -34,6 +34,7 @@ class _PremiumViewState extends State<PremiumView> {
                 'purchaseDetails.error ${purchaseDetails.error?.message}');
             if (purchaseDetails.error?.message ==
                 'BillingResponse.itemAlreadyOwned') {
+              context.read<ProfileCubit>().changeVipStatus();
               debugPrint(
                   'purchaseDetails: ürün daha önceden satın alınmıştır şimdi update edilecek PremiumPage');
             }

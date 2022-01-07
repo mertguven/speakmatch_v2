@@ -42,7 +42,7 @@ class AuthenticationRepository extends IAuthentication {
       final serviceResponse = await _authenticationService.login(model);
       if (serviceResponse.success) {
         if (!serviceResponse.user.emailVerified) {
-          await serviceResponse.user.sendEmailVerification();
+          //await serviceResponse.user.sendEmailVerification();
           return AuthenticationServiceResponseModel(
               success: false,
               message:
