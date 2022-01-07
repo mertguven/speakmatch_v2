@@ -22,11 +22,11 @@ void deleteUserDialog(ProfileCubit read) {
               if (index == 0) {
                 Get.back();
               } else if (index == 1) {
-                if (SharedPrefs.getidToken.isEmpty &&
-                    _textEditingController.text.isNotEmpty) {
+                if (SharedPrefs.getidToken == null &&
+                    _textEditingController.text != null) {
                   await read.deleteUser(DeleteUserRequestModel(
                       password: _textEditingController.text.trim()));
-                } else if (SharedPrefs.getidToken.isNotEmpty) {
+                } else if (SharedPrefs.getidToken != null) {
                   await read.deleteUser();
                 } else {
                   validate.value = true;
@@ -59,7 +59,7 @@ void deleteUserDialog(ProfileCubit read) {
             style: TextStyle(color: Colors.grey, fontSize: 10),
           ),
         ),
-        SharedPrefs.getidToken.isEmpty
+        SharedPrefs.getidToken == null
             ? BlocListener<ProfileCubit, ProfileState>(
                 listener: (context, state) {
                   if (state is ProfileErrorState) {

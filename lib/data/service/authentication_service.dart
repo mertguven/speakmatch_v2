@@ -98,7 +98,6 @@ class AuthenticationService extends IAuthentication {
           EmailAuthProvider.credential(
               email: _firebaseAuth.currentUser.email,
               password: model.password));
-
       await _firebaseAuth.currentUser.updateEmail(model.email);
       return UpdateEmailResponseModel(success: true);
     } on FirebaseAuthException catch (e) {

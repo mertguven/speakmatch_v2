@@ -103,7 +103,8 @@ class _AuthenticationViewState extends State<AuthenticationView>
               },
                   buttonText: "Got it",
                   title: "Email has been sent",
-                  image: Image.asset("assets/images/sent_email.png"));
+                  image: Image.asset("assets/images/sent_email.png",
+                      width: context.width * 0.5));
             } else if (state is AuthenticationSignupUnsuccessfulState) {
               customSnackbar(false, state.errorMessage);
             }

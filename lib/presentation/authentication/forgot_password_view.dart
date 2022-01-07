@@ -40,7 +40,8 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
             transition: Transition.leftToRightWithFade),
         buttonText: "Got it",
         title: "Email has been sent",
-        image: Image.asset("assets/images/sent_email.png"));
+        image: Image.asset("assets/images/sent_email.png",
+            width: context.width * 0.5));
   }
 
   @override

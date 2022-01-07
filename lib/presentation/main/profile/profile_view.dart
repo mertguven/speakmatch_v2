@@ -205,8 +205,11 @@ class _ProfileViewState extends State<ProfileView> {
         } else if (index == 2) {
           Get.to(() => SettingsView(), transition: Transition.cupertino);
         } else {
-          imagePickerFunction()
-              .then((value) => context.read<ProfileCubit>().uploadPhoto(value));
+          imagePickerFunction().then((value) {
+            if (value != null) {
+              return context.read<ProfileCubit>().uploadPhoto(value);
+            }
+          });
         }
       },
       child: Column(
@@ -312,6 +315,10 @@ class _ProfileViewState extends State<ProfileView> {
 
   Future<Uint8List> imagePickerFunction() async {
     final file = await ImagePicker().pickImage(source: ImageSource.gallery);
-    return await file.readAsBytes();
+    if (file != null) {
+      return await file.readAsBytes();
+    } else {
+      return null;
+    }
   }
 }

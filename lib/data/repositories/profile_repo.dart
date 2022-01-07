@@ -41,6 +41,7 @@ class ProfileRepository {
   Future<UpdateEmailResponseModel> changeEmail(
       UpdateEmailRequestModel model) async {
     try {
+      await _firestoreService.updateUserWithMap({'email': '${model.email}'});
       return _authenticationService.changeEmail(model);
     } catch (e) {
       print("profile repository error: " + e.toString());
@@ -85,9 +86,10 @@ class ProfileRepository {
   Future<DeleteUserResponseModel> deleteUser(
       [DeleteUserRequestModel model]) async {
     try {
+      await _firestoreService.deleteUser();
       final deleteAuthentication =
           await _authenticationService.deleteUser(model);
-      await _firestoreService.deleteUser();
+
       return deleteAuthentication;
     } catch (e) {
       print("profile repository error: " + e.toString());
