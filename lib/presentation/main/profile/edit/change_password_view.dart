@@ -36,7 +36,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
         elevation: 0,
         centerTitle: true,
         title: Text(
-          "Change Password",
+          "changePassword".tr,
           style: TextStyle(color: Colors.black),
         ),
         leading: IconButton(
@@ -52,13 +52,13 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
             child: bloc.BlocListener<ProfileCubit, ProfileState>(
               listener: (context, state) {
                 if (state is ProfileLoadingState) {
-                  EasyLoading.show(status: "Loading...");
+                  EasyLoading.show(status: "loading".tr);
                 } else {
                   EasyLoading.dismiss();
                   if (state is SuccessSignOutState) {
                     Get.offAll(() => AuthenticationView(),
                         transition: Transition.cupertino);
-                    customSnackbar(true, "Password has been changed.");
+                    customSnackbar(true, "passwordHasBeenChanged".tr);
                   } else if (state is ProfileErrorState) {
                     customSnackbar(false, state.errorMessage);
                   }
@@ -80,7 +80,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
         padding: const EdgeInsets.symmetric(horizontal: 20),
         children: [
           TextFormField(
-              decoration: InputDecoration(labelText: "Current Password"),
+              decoration: InputDecoration(labelText: "currentPassword".tr),
               focusNode: _focusNode[0],
               textInputAction: TextInputAction.next,
               onFieldSubmitted: (term) {
@@ -90,7 +90,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
               controller: _textEditingController[0]),
           SizedBox(height: 20),
           TextFormField(
-              decoration: InputDecoration(labelText: "New Password"),
+              decoration: InputDecoration(labelText: "newPassword".tr),
               focusNode: _focusNode[1],
               textInputAction: TextInputAction.next,
               onFieldSubmitted: (term) {
@@ -100,7 +100,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
               controller: _textEditingController[1]),
           SizedBox(height: 20),
           TextFormField(
-              decoration: InputDecoration(labelText: "Re-NewPassword"),
+              decoration: InputDecoration(labelText: "reNewPassword".tr),
               focusNode: _focusNode[2],
               onFieldSubmitted: (term) {
                 _focusNode[2].unfocus();
@@ -116,18 +116,17 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
         _textEditingController[1].text.isNotEmpty &&
         _textEditingController[2].text.isNotEmpty) {
       if (_textEditingController[0].text == _textEditingController[1].text) {
-        customSnackbar(
-            false, "Old password and new password cannot be the same");
+        customSnackbar(false, "oldPasswordAndNewPasswordCannotBeTheSame".tr);
       } else if (_textEditingController[1].text ==
           _textEditingController[2].text) {
         context.read<ProfileCubit>().changePassword(UpdatePasswordRequestModel(
             oldPassword: _textEditingController[0].text.trim(),
             newPassword: _textEditingController[1].text.trim()));
       } else {
-        customSnackbar(false, "Passwords must be the same");
+        customSnackbar(false, "passwordsMustBeTheSame".tr);
       }
     } else {
-      customSnackbar(false, "All field must be filled.");
+      customSnackbar(false, "AllFieldMustBeFilled".tr);
     }
   }
 }

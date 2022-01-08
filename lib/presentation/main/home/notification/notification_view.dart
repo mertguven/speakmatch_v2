@@ -50,8 +50,8 @@ class _NotificationViewState extends State<NotificationView> {
   AppBar get _appBar {
     return AppBar(
       backgroundColor: Theme.of(context).colorScheme.secondary,
-      title:
-          Text("Notifications", style: TextStyle(fontWeight: FontWeight.bold)),
+      title: Text("notifications".tr,
+          style: TextStyle(fontWeight: FontWeight.bold)),
     );
   }
 
@@ -129,7 +129,7 @@ class _NotificationViewState extends State<NotificationView> {
             width: context.width * 0.7,
           ),
           Text(
-            "There is nothing here",
+            "thereIsNothingHere".tr,
             style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,

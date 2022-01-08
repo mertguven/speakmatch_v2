@@ -125,9 +125,6 @@ class _VoiceCallViewState extends State<VoiceCallView> {
           () => Get.offAll(() => PageRouterView(),
               transition: Transition.noTransition),
         );
-    /*context.read<CallCubit>().deleteUserAtWaitingRoom().whenComplete(() =>
-        Get.offAll(() => PageRouterView(),
-            transition: Transition.noTransition));*/
   }
 
   @override
@@ -216,7 +213,7 @@ class _VoiceCallViewState extends State<VoiceCallView> {
                     letterSpacing: 0.5),
               ),
               Obx(() => Text(
-                    userJoined.value ? "Online" : "Offline",
+                    userJoined.value ? "online".tr : "offline".tr,
                     style: TextStyle(
                         color: Theme.of(context).primaryColor,
                         fontWeight: FontWeight.bold),

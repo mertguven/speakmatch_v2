@@ -15,6 +15,7 @@ import 'package:speakmatch_v2/cubit/sample_bloc_observer.dart';
 import 'package:speakmatch_v2/data/service/push_notification_service.dart';
 import 'package:speakmatch_v2/shared-prefs.dart';
 import 'package:speakmatch_v2/presentation/splash_view.dart';
+import 'package:speakmatch_v2/translations/languages.dart';
 import 'core/theme/app_theme.dart';
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 
@@ -51,6 +52,9 @@ class _AppState extends State<App> {
         BlocProvider<HomeCubit>(create: (_) => HomeCubit()),
       ],
       child: GetMaterialApp(
+        translations: Languages(),
+        locale: Locale(SharedPrefs.getLocale),
+        fallbackLocale: AppConstant.supportedLocales.first,
         title: AppConstant.appName,
         builder: EasyLoading.init(),
         debugShowCheckedModeBanner: false,

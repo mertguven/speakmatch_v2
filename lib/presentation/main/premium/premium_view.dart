@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:lottie/lottie.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -148,7 +148,7 @@ class _PremiumViewState extends State<PremiumView> {
                     widthFactor: 0.7,
                     child: Lottie.asset("assets/animations/crown.json")),
                 Text(
-                  "AD-FREE USE",
+                  "adFreeUse".tr,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 26,
@@ -157,7 +157,7 @@ class _PremiumViewState extends State<PremiumView> {
                   ),
                 ),
                 Text(
-                  "You can turn off ads and meet more people!",
+                  "youCanTurnOffAdsAndMeetMorePeople".tr,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 16,
@@ -191,7 +191,7 @@ class _PremiumViewState extends State<PremiumView> {
                             topLeft: Radius.circular(10),
                             topRight: Radius.circular(10))),
                     child: Text(
-                      "Best Value - Save 75%",
+                      "bestValueSave".tr,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 22,
@@ -208,7 +208,7 @@ class _PremiumViewState extends State<PremiumView> {
                         Column(
                           children: [
                             Text(
-                              "Lifetime",
+                              "lifetime".tr,
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 25,
@@ -216,7 +216,7 @@ class _PremiumViewState extends State<PremiumView> {
                               ),
                             ),
                             Text(
-                              "(Pay once)",
+                              "payOnce".tr,
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                           ],
@@ -241,7 +241,7 @@ class _PremiumViewState extends State<PremiumView> {
               width: double.infinity,
               child: ElevatedButton(
                 child: Text(
-                  "Upgrade Now",
+                  "upgradeNow".tr,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 20,

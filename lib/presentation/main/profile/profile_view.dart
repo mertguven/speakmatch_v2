@@ -150,7 +150,7 @@ class _ProfileViewState extends State<ProfileView> {
                                 ),
                               ),
                               Text(
-                                "Speakmatch VIP",
+                                "speakmatchVip".tr,
                                 style: TextStyle(
                                     fontSize: 20,
                                     color:
@@ -160,9 +160,11 @@ class _ProfileViewState extends State<ProfileView> {
                             ],
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(top: 10),
+                            padding: const EdgeInsets.only(
+                                top: 10, left: 20, right: 20),
                             child: Text(
-                              "You've to get VIP to block ads!",
+                              "youveToGetVipToBlockAds".tr,
+                              textAlign: TextAlign.center,
                               style: TextStyle(fontSize: 16),
                             ),
                           ),
@@ -179,7 +181,7 @@ class _ProfileViewState extends State<ProfileView> {
                               shape: StadiumBorder(),
                               primary: Theme.of(context).colorScheme.secondary),
                           child: Text(
-                            "Get Speakmatch VIP",
+                            "getSpeakmatchVip".tr,
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.bold),
                           ),
@@ -230,10 +232,10 @@ class _ProfileViewState extends State<ProfileView> {
           ),
           Text(
             index == 0
-                ? "Edit Profile"
+                ? "editProfile".tr
                 : index == 1
-                    ? "Change Photo"
-                    : "Settings",
+                    ? "changePhoto".tr
+                    : "settings".tr,
             style: TextStyle(
               color: index == 1
                   ? Theme.of(context).colorScheme.secondary
@@ -241,74 +243,6 @@ class _ProfileViewState extends State<ProfileView> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Container likeAndDislikeContainer(int index) {
-    return Container(
-      constraints: BoxConstraints(minWidth: context.width * 0.2),
-      margin: EdgeInsets.only(bottom: 20),
-      padding: EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        color: Colors.blueGrey.withOpacity(0.1),
-      ),
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10),
-            child: Text(
-              index == 0 ? "134" : "59",
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.primary,
-                fontWeight: FontWeight.bold,
-                fontSize: 26,
-              ),
-            ),
-          ),
-          Text(
-            index == 0 ? "Like" : "Dislike",
-            style: TextStyle(color: Colors.grey, fontSize: 20),
-          ),
-        ],
-      ),
-    );
-  }
-
-  ListTile customListTile(int index) {
-    return ListTile(
-      title: Text(
-          index == 0
-              ? "Edit Profile"
-              : index == 1
-                  ? "Change Password"
-                  : index == 2
-                      ? "Contact us"
-                      : "Privacy Policy",
-          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18)),
-      onTap: () {},
-      leading: Container(
-        decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(color: Colors.grey.withOpacity(0.2), blurRadius: 5),
-            ]),
-        padding: EdgeInsets.all(15),
-        child: Icon(
-          index == 0
-              ? FontAwesomeIcons.userEdit
-              : index == 1
-                  ? FontAwesomeIcons.key
-                  : index == 2
-                      ? FontAwesomeIcons.solidAddressBook
-                      : FontAwesomeIcons.userShield,
-          color: Theme.of(context).colorScheme.primary,
-        ),
-      ),
-      trailing: Icon(
-        Icons.keyboard_arrow_right,
       ),
     );
   }

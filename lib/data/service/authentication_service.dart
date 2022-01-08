@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:speakmatch_v2/controller/iauthentication.dart';
 import 'package:speakmatch_v2/data/model/authentication/request/authentication_request_model.dart';
@@ -61,18 +62,27 @@ class AuthenticationService extends IAuthentication {
   Future<AuthenticationServiceResponseModel> loginWithGoogle() async {
     try {
       final googleUser = await _googleSignIn.signIn();
-      final googleAuth = await googleUser?.authentication;
-      final credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth?.accessToken, idToken: googleAuth?.idToken);
-      final responseCredential =
-          await FirebaseAuth.instance.signInWithCredential(credential);
-      SharedPrefs.saveIdToken(googleAuth.idToken);
-      SharedPrefs.saveAccessToken(googleAuth.accessToken);
-      return AuthenticationServiceResponseModel(
-          success: true, user: responseCredential.user);
+      if (googleUser != null) {
+        final googleAuth = await googleUser.authentication;
+        final credential = GoogleAuthProvider.credential(
+            accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
+        final responseCredential =
+            await FirebaseAuth.instance.signInWithCredential(credential);
+        SharedPrefs.saveIdToken(googleAuth.idToken);
+        SharedPrefs.saveAccessToken(googleAuth.accessToken);
+        return AuthenticationServiceResponseModel(
+            success: true, user: responseCredential.user);
+      } else {
+        return AuthenticationServiceResponseModel(
+            success: false, message: "somethingWentWrong".tr);
+      }
     } on FirebaseAuthException catch (e) {
       return AuthenticationServiceResponseModel(
           success: false, message: e.message);
+    } catch (e) {
+      print(e.toString());
+      return AuthenticationServiceResponseModel(
+          success: false, message: "somethingWentWrong".tr);
     }
   }
 
@@ -99,6 +109,7 @@ class AuthenticationService extends IAuthentication {
               email: _firebaseAuth.currentUser.email,
               password: model.password));
       await _firebaseAuth.currentUser.updateEmail(model.email);
+      await _firebaseAuth.currentUser.sendEmailVerification();
       return UpdateEmailResponseModel(success: true);
     } on FirebaseAuthException catch (e) {
       return UpdateEmailResponseModel(success: false, message: e.message);

@@ -10,6 +10,7 @@ import 'package:speakmatch_v2/core/utilities/custom_snackbar.dart';
 import 'package:speakmatch_v2/core/utilities/delete_user_dialog.dart';
 import 'package:speakmatch_v2/cubit/profile/profile_cubit.dart';
 import 'package:speakmatch_v2/presentation/authentication/authentication_view.dart';
+import 'package:speakmatch_v2/presentation/main/profile/settings/change_language_view.dart';
 
 class SettingsView extends StatefulWidget {
   const SettingsView({Key key}) : super(key: key);
@@ -25,7 +26,7 @@ class _SettingsViewState extends State<SettingsView> {
       appBar: AppBar(
         elevation: 1,
         title: Text(
-          "Settings",
+          "settings".tr,
           style: TextStyle(color: Colors.black),
         ),
         leading: IconButton(
@@ -41,13 +42,14 @@ class _SettingsViewState extends State<SettingsView> {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Column(
           children: [
-            listItems("Contact Us", "Help and Support"),
-            listItems("Legal", "Privacy Policy"),
-            listItems("Share", "Invite Your Friends"),
+            listItems("language".tr, "changeLanguage".tr),
+            listItems("contactUs".tr, "helpAndSupport".tr),
+            listItems("legal".tr, "privacyPolicy".tr),
+            listItems("share".tr, "inviteYourFriends".tr),
             bloc.BlocConsumer<ProfileCubit, ProfileState>(
               listener: (context, state) {
                 if (state is ProfileLoadingState) {
-                  EasyLoading.show(status: "Loading...");
+                  EasyLoading.show(status: "loading".tr);
                 } else {
                   EasyLoading.dismiss();
                   if (state is SuccessSignOutState) {
@@ -60,11 +62,11 @@ class _SettingsViewState extends State<SettingsView> {
                 }
               },
               builder: (context, state) {
-                return signoutAndDeleteButton("Sign Out");
+                return signoutAndDeleteButton("signOut".tr);
               },
             ),
             imageAndVersionWidget(),
-            signoutAndDeleteButton("Delete Account"),
+            signoutAndDeleteButton("deleteAccount".tr),
           ],
         ),
       ),
@@ -94,9 +96,12 @@ class _SettingsViewState extends State<SettingsView> {
             ),
             child: ListTile(
               onTap: () {
-                if (title == "Contact Us") {
+                if (title == "language".tr) {
+                  Get.to(() => ChangeLanguageView(),
+                      transition: Transition.cupertino);
+                } else if (title == "contactUs".tr) {
                   UrlLauncherHelper().emailSender();
-                } else if (title == "Legal") {
+                } else if (title == "legal".tr) {
                   UrlLauncherHelper().launcher(AppConstant.privacyPolicyUrl);
                 } else {
                   Share.share(
@@ -121,7 +126,7 @@ class _SettingsViewState extends State<SettingsView> {
             child: Image.asset("assets/images/settings_logo.png"),
           ),
           Text(
-            "Version 1.0.0 (Release)",
+            "version".tr,
             style: TextStyle(color: Colors.grey),
           )
         ],
@@ -135,29 +140,29 @@ class _SettingsViewState extends State<SettingsView> {
       margin: const EdgeInsets.only(top: 20),
       child: ElevatedButton.icon(
           onPressed: () {
-            if (title == "Sign Out") {
+            if (title == "signOut".tr) {
               signOut();
             } else {
               deleteUserDialog(context.read<ProfileCubit>());
             }
           },
           style: ElevatedButton.styleFrom(
-              primary: title == "Sign Out"
+              primary: title == "signOut".tr
                   ? Theme.of(context).colorScheme.secondary
                   : Theme.of(context).primaryColor,
               padding: const EdgeInsets.symmetric(vertical: 15)),
           icon: Icon(
-              title == "Sign Out"
+              title == "signOut".tr
                   ? FontAwesomeIcons.signOutAlt
                   : FontAwesomeIcons.trash,
-              color: title == "Sign Out"
+              color: title == "signOut".tr
                   ? Theme.of(context).primaryColor
                   : Theme.of(context).colorScheme.secondary),
           label: Text(
             title,
             style: TextStyle(
                 fontWeight: FontWeight.w600,
-                color: title == "Sign Out"
+                color: title == "signOut".tr
                     ? Theme.of(context).primaryColor
                     : Theme.of(context).colorScheme.secondary),
           )),

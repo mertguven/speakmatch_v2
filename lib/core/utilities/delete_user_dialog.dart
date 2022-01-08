@@ -7,12 +7,12 @@ import 'package:speakmatch_v2/data/model/profile/request/delete_user_request_mod
 import 'package:speakmatch_v2/shared-prefs.dart';
 
 void deleteUserDialog(ProfileCubit read) {
-  final String _title = "Delete User";
-  final String _cancelText = "Cancel";
-  final String _deleteText = "Delete";
-  final String _contentText = "Are you sure want to delete your account?";
+  final String _title = "deleteAccount".tr;
+  final String _cancelText = "cancel".tr;
+  final String _deleteText = "delete".tr;
+  final String _contentText = "areYouSureWantToDeleteYourAccount".tr;
   final String _noteText =
-      "Please, rethink your decision because you will not be able to undo this action!";
+      "pleaseRethinkYourDecisionBecauseYouWillNotBeAbleToUndoThisAction".tr;
   TextEditingController _textEditingController = TextEditingController();
   final validate = false.obs;
   final List<ElevatedButton> buttons = List.generate(
@@ -72,9 +72,9 @@ void deleteUserDialog(ProfileCubit read) {
                     () => TextField(
                       controller: _textEditingController,
                       decoration: InputDecoration(
-                          labelText: "Password",
+                          labelText: "password".tr,
                           errorText:
-                              validate.value ? "password is required" : null,
+                              validate.value ? "passwordIsRequired".tr : null,
                           contentPadding: const EdgeInsets.all(8),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10))),

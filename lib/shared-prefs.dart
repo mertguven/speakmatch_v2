@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefs {
@@ -9,6 +11,11 @@ class SharedPrefs {
       _prefs = await SharedPreferences.getInstance();
     }
   }
+
+  static Future<bool> saveLocale(Locale locale) =>
+      _prefs.setString("locale", locale.languageCode);
+  static String get getLocale =>
+      _prefs.getString("locale") ?? Get.deviceLocale.languageCode;
 
   static Future<void> saveUid(String uid) async => _prefs.setString('uid', uid);
 

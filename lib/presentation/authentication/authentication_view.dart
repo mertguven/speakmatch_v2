@@ -1,9 +1,4 @@
-// ignore_for_file: deprecated_member_use
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' as bloc;
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -86,7 +81,7 @@ class _AuthenticationViewState extends State<AuthenticationView>
       child: bloc.BlocConsumer<AuthenticationCubit, AuthenticationState>(
         listener: (context, state) {
           if (state is AuthenticationLoadingState) {
-            EasyLoading.show(status: "Loading...");
+            EasyLoading.show(status: "loading".tr);
           } else {
             EasyLoading.dismiss();
             if (state is AuthenticationLoginOrGoogleSuccessfulState) {
@@ -95,14 +90,13 @@ class _AuthenticationViewState extends State<AuthenticationView>
               customSnackbar(false, state.errorMessage);
             } else if (state is AuthenticationSignupSuccessfulState) {
               customDialog(context,
-                  content:
-                      "Verification email has been sent. Please confirm your email.",
-                  onPressed: () {
+                  content: "verificationEmailHasBeenSentPleaseConfirmYourEmail"
+                      .tr, onPressed: () {
                 Get.back();
                 _tabController.animateTo(0, curve: Curves.easeInOutBack);
               },
-                  buttonText: "Got it",
-                  title: "Email has been sent",
+                  buttonText: "gotIt".tr,
+                  title: "emailHasBeenSent".tr,
                   image: Image.asset("assets/images/sent_email.png",
                       width: context.width * 0.5));
             } else if (state is AuthenticationSignupUnsuccessfulState) {
@@ -168,7 +162,7 @@ class _AuthenticationViewState extends State<AuthenticationView>
         tabs: [
           Tab(
             child: Text(
-              "Existing",
+              "existing".tr,
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
@@ -177,7 +171,7 @@ class _AuthenticationViewState extends State<AuthenticationView>
           ),
           Tab(
             child: Text(
-              "New",
+              "new".tr,
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
@@ -225,7 +219,7 @@ class _AuthenticationViewState extends State<AuthenticationView>
               itemBuilder: (context, index) => CustomAuthenticationTextField(
                 textEditingController: loginTextController[index],
                 keyboardType: index == 0 ? TextInputType.emailAddress : null,
-                hintText: index == 0 ? 'Email Address' : 'Password',
+                hintText: index == 0 ? 'emailAddress'.tr : 'password'.tr,
                 prefixIcon: index == 0
                     ? Icon(FontAwesomeIcons.solidEnvelope)
                     : Icon(FontAwesomeIcons.lock),
@@ -256,12 +250,12 @@ class _AuthenticationViewState extends State<AuthenticationView>
           Container(
             width: double.infinity,
             child: LoginAndSignUpButton(
-              buttonText: "LOGIN",
+              buttonText: "login".tr,
               onPressed: () => loginButtonEvent(),
             ),
           ),
           Spacer(flex: 2),
-          CustomDivider(centerText: "Or"),
+          CustomDivider(centerText: "or".tr),
           Spacer(flex: 2),
           GoogleButton(onPressed: () => loginWithGoogle()),
           Spacer(flex: 2),
@@ -277,7 +271,7 @@ class _AuthenticationViewState extends State<AuthenticationView>
         onTap: () => Get.to(() => ForgotPasswordView(),
             transition: Transition.rightToLeft),
         child: Text(
-          "Forgot Password?",
+          "forgotPassword".tr,
           style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 16),
         ),
       ),
@@ -310,12 +304,12 @@ class _AuthenticationViewState extends State<AuthenticationView>
                         ? isSignupConfirmationVisible
                         : null,
                 hintText: index == 0
-                    ? 'Name'
+                    ? 'name'.tr
                     : index == 1
-                        ? 'Email Address'
+                        ? 'emailAddress'.tr
                         : index == 2
-                            ? 'Password'
-                            : "Confirmation",
+                            ? 'password'.tr
+                            : "confirmation".tr,
                 prefixIcon: index == 0
                     ? Icon(FontAwesomeIcons.userAlt)
                     : index == 1
@@ -352,7 +346,7 @@ class _AuthenticationViewState extends State<AuthenticationView>
           Container(
             width: double.infinity,
             child: LoginAndSignUpButton(
-              buttonText: "SIGN UP",
+              buttonText: "signUp".tr,
               onPressed: () => signUpButtonEvent(),
             ),
           ),
@@ -373,10 +367,10 @@ class _AuthenticationViewState extends State<AuthenticationView>
             email: registerTextController[1].text,
             password: registerTextController[2].text));
       } else {
-        customSnackbar(false, "Passwords must be the same");
+        customSnackbar(false, "passwordsMustBeTheSame".tr);
       }
     } else {
-      customSnackbar(false, "All fields must be filled");
+      customSnackbar(false, "allFieldsMustBeFilled".tr);
     }
   }
 
@@ -387,7 +381,7 @@ class _AuthenticationViewState extends State<AuthenticationView>
           email: loginTextController[0].text,
           password: loginTextController[1].text));
     } else {
-      customSnackbar(false, "All fields must be filled.");
+      customSnackbar(false, "allFieldsMustBeFilled".tr);
     }
   }
 

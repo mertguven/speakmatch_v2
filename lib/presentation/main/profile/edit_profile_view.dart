@@ -18,7 +18,7 @@ class EditProfileView extends StatelessWidget {
         elevation: 0,
         centerTitle: true,
         title: Text(
-          "Edit Profile",
+          "editProfile".tr,
           style: TextStyle(color: Colors.black),
         ),
         leading: IconButton(
@@ -33,9 +33,7 @@ class EditProfileView extends StatelessWidget {
       body: ListView.separated(
         itemCount: 3,
         shrinkWrap: true,
-        separatorBuilder: (context, index) {
-          return SizedBox(height: 10);
-        },
+        separatorBuilder: (context, index) => SizedBox(height: 10),
         itemBuilder: (context, index) => ListTile(
           leading: Icon(
               index == 0
@@ -46,10 +44,10 @@ class EditProfileView extends StatelessWidget {
               color: Colors.black),
           title: Text(
             index == 0
-                ? "Change Personal Information"
+                ? "changePersonalInformation".tr
                 : index == 1
-                    ? "Change Password"
-                    : "Change Email",
+                    ? "changePassword".tr
+                    : "changeEmail".tr,
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           trailing: Icon(FontAwesomeIcons.chevronRight, color: Colors.black),

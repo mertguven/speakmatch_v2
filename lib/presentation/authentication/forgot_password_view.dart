@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' as bloc;
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -29,17 +27,17 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
       context.read<AuthenticationCubit>().forgotPassword(
           ForgotPasswordRequestModel(email: emailTextController.text));
     } else {
-      customSnackbar(false, "Email field must be filled.");
+      customSnackbar(false, "emailFieldMustBeFilled".tr);
     }
   }
 
   void successForgotPasswordDialog() {
     customDialog(context,
-        content: "Password reset email has been sent to your email.",
-        onPressed: () => Get.offAll(AuthenticationView(),
+        content: "passwordResetEmailHasBeenSentToYourEmail".tr,
+        onPressed: () => Get.offAll(() => AuthenticationView(),
             transition: Transition.leftToRightWithFade),
-        buttonText: "Got it",
-        title: "Email has been sent",
+        buttonText: "gotIt".tr,
+        title: "emailHasBeenSent".tr,
         image: Image.asset("assets/images/sent_email.png",
             width: context.width * 0.5));
   }
@@ -51,7 +49,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
       child: bloc.BlocConsumer<AuthenticationCubit, AuthenticationState>(
         listener: (context, state) {
           if (state is AuthenticationLoadingState) {
-            EasyLoading.show(status: "Loading...");
+            EasyLoading.show(status: "loading".tr);
           } else {
             EasyLoading.dismiss();
             if (state is SuccessForgotPasswordState) {
@@ -77,7 +75,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
       centerTitle: true,
       elevation: 0,
       title: Text(
-        "Forgot Password?",
+        "forgotPassword".tr,
         style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
       ),
     );
@@ -113,7 +111,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
           Padding(
             padding: const EdgeInsets.only(bottom: 10),
             child: Text(
-              "Enter the email address associated with your account",
+              "enterTheEmailAddressAssociatedWithYourAccount".tr,
               textAlign: TextAlign.center,
               style: TextStyle(
                   fontSize: 22,
@@ -122,7 +120,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
             ),
           ),
           Text(
-            "We will email you a link to reset your password",
+            "weWillEmailYouALinkToResetYourPassword".tr,
             textAlign: TextAlign.center,
             style: TextStyle(
                 fontSize: 18,
@@ -148,7 +146,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
               border: InputBorder.none,
-              hintText: "Enter Email Address",
+              hintText: "enterEmailAddress".tr,
               hintStyle: TextStyle(color: Colors.white, fontSize: 20),
             ),
           ),
@@ -170,7 +168,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         ),
         child: Text(
-          "Send",
+          "send".tr,
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
       ),

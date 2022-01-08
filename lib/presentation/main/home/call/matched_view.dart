@@ -65,7 +65,7 @@ class _MatchedViewState extends State<MatchedView> {
                 }
               },
               child: Text(
-                "Connecting...",
+                "connecting".tr,
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Theme.of(context).colorScheme.primary,

@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class AppConstant {
   static const String splashRoute = '/';
   static const String authenticationRoute = '/authentication';
@@ -11,4 +13,5 @@ class AppConstant {
       "https://play.google.com/store/apps/details?id=com.guha.speakmatch";
   static const String shareTextContent =
       "In SpeakMatch, you can meet random people and expand your network. Join us too!";
+  static const supportedLocales = [Locale('en'), Locale('tr')];
 }

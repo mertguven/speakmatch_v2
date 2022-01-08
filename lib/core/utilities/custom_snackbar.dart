@@ -6,7 +6,7 @@ void customSnackbar(bool success, String content) {
     "",
     "",
     titleText: Text(
-      success ? "Successful!" : "Error!",
+      success ? "successful".tr : "error".tr,
       style: TextStyle(
           color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
     ),

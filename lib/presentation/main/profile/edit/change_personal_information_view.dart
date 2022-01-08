@@ -45,7 +45,7 @@ class _ChangePersonalInformationViewState
         elevation: 0,
         centerTitle: true,
         title: Text(
-          "Change Personal Information",
+          "changePersonalInformation".tr,
           style: TextStyle(color: Colors.black),
         ),
         leading: IconButton(
@@ -61,13 +61,13 @@ class _ChangePersonalInformationViewState
             child: bloc.BlocListener<ProfileCubit, ProfileState>(
               listener: (context, state) async {
                 if (state is ProfileLoadingState) {
-                  await EasyLoading.show(status: "Loading...");
+                  await EasyLoading.show(status: "loading".tr);
                 } else {
                   EasyLoading.dismiss().whenComplete(() {
                     if (state is SuccessChangePersonalInformationState) {
                       Get.offAll(() => PageRouterView(pageToShow: 2),
                           transition: Transition.leftToRight);
-                      customSnackbar(true, "Changes saved.");
+                      customSnackbar(true, "changesSaved".tr);
                     } else if (state is ProfileErrorState) {
                       customSnackbar(false, state.errorMessage);
                     }
@@ -90,7 +90,7 @@ class _ChangePersonalInformationViewState
         padding: const EdgeInsets.symmetric(horizontal: 20),
         children: [
           TextFormField(
-              decoration: InputDecoration(labelText: "Name"),
+              decoration: InputDecoration(labelText: "name".tr),
               controller: _textEditingController),
           SizedBox(height: 20),
           Row(
@@ -98,7 +98,7 @@ class _ChangePersonalInformationViewState
               Expanded(
                 child: Obx(
                   () => RadioListTile(
-                    title: Text("Male"),
+                    title: Text("male".tr),
                     activeColor: Theme.of(context).colorScheme.primary,
                     groupValue: genderList.value,
                     value: GenderList.male,
@@ -111,7 +111,7 @@ class _ChangePersonalInformationViewState
               Expanded(
                 child: Obx(
                   () => RadioListTile(
-                    title: Text("Female"),
+                    title: Text("female".tr),
                     activeColor: Theme.of(context).colorScheme.primary,
                     groupValue: genderList.value,
                     value: GenderList.female,
@@ -147,7 +147,7 @@ class _ChangePersonalInformationViewState
             lastSignInTime: widget.userResponseModel.lastSignInTime));
       } catch (e) {}
     } else {
-      customSnackbar(false, "Name field must be filled.");
+      customSnackbar(false, "nameFieldMustBeFilled".tr);
     }
   }
 }

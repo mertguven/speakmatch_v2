@@ -86,7 +86,7 @@ class _CallingViewState extends State<CallingView> {
       children: [
         LottieBuilder.asset("assets/animations/calling.json"),
         Text(
-          "Calling...",
+          "calling".tr,
           style: TextStyle(
               fontWeight: FontWeight.bold,
               color: Theme.of(context).colorScheme.primary,

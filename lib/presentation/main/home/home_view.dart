@@ -76,7 +76,7 @@ class _HomeViewState extends State<HomeView> {
         child: Column(
           children: [
             Text(
-              "Call",
+              "call".tr,
               style: TextStyle(
                   color: Colors.white,
                   fontSize: 24,
@@ -85,7 +85,7 @@ class _HomeViewState extends State<HomeView> {
             ),
             _callButton(context),
             Text(
-              "and meet new people!",
+              "andMeetNewPeople".tr,
               style: TextStyle(
                   fontSize: 16,
                   color: Colors.white,
@@ -149,7 +149,7 @@ class _HomeViewState extends State<HomeView> {
               color: Theme.of(context).colorScheme.primary,
             ),
             Text(
-              _adsStatus.value ? "Ads On" : "Ads Off",
+              _adsStatus.value ? "adsOn".tr : "adsOff".tr,
               style: TextStyle(fontWeight: FontWeight.w500),
             ),
             Switch.adaptive(
@@ -176,7 +176,7 @@ class _HomeViewState extends State<HomeView> {
               color: Theme.of(context).colorScheme.primary,
             ),
             Text(
-              _profileDisplayStatus.value ? "Show Profile" : "Hide Profile",
+              _profileDisplayStatus.value ? "showProfile".tr : "hideProfile".tr,
               style: TextStyle(fontWeight: FontWeight.w500),
             ),
             Switch.adaptive(
@@ -218,9 +218,9 @@ class _HomeViewState extends State<HomeView> {
         lottiePath: "assets/animations/go_premium_now.json",
         onPressed: () => Get.offAll(() => PageRouterView(pageToShow: 0),
             transition: Transition.leftToRightWithFade),
-        buttonText: "Upgrade",
-        title: "VIP Membership Required",
-        content: "You must have a VIP membership to be able to turn off ads",
+        buttonText: "upgradeNow".tr,
+        title: "vipMembershipRequired".tr,
+        content: "youMustHaveAVipMembershipToBeAbleToTurnOffAds".tr,
       );
     }
   }

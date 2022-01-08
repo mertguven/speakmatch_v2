@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' as bloc;
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -37,7 +36,7 @@ class _ChangeEmailViewState extends State<ChangeEmailView> {
         elevation: 0,
         centerTitle: true,
         title: Text(
-          "Change Email",
+          "changeEmail".tr,
           style: TextStyle(color: Colors.black),
         ),
         leading: IconButton(
@@ -53,13 +52,13 @@ class _ChangeEmailViewState extends State<ChangeEmailView> {
             child: bloc.BlocListener<ProfileCubit, ProfileState>(
               listener: (context, state) {
                 if (state is ProfileLoadingState) {
-                  EasyLoading.show(status: "Loading...");
+                  EasyLoading.show(status: "loading".tr);
                 } else {
                   EasyLoading.dismiss();
                   if (state is SuccessSignOutState) {
                     Get.offAll(() => AuthenticationView(),
                         transition: Transition.cupertino);
-                    customSnackbar(true, "Email has been changed.");
+                    customSnackbar(true, "emailHasBeenChanged".tr);
                   } else if (state is ProfileErrorState) {
                     customSnackbar(false, state.errorMessage);
                   }
@@ -81,7 +80,7 @@ class _ChangeEmailViewState extends State<ChangeEmailView> {
         padding: const EdgeInsets.symmetric(horizontal: 20),
         children: [
           TextFormField(
-            decoration: InputDecoration(labelText: "Current Password"),
+            decoration: InputDecoration(labelText: "currentPassword".tr),
             focusNode: _focusNode[0],
             textInputAction: TextInputAction.next,
             controller: _textEditingController[0],
@@ -92,7 +91,7 @@ class _ChangeEmailViewState extends State<ChangeEmailView> {
           ),
           SizedBox(height: 20),
           TextFormField(
-            decoration: InputDecoration(labelText: "New Email"),
+            decoration: InputDecoration(labelText: "newEmail".tr),
             keyboardType: TextInputType.emailAddress,
             focusNode: _focusNode[1],
             controller: _textEditingController[1],
@@ -110,7 +109,7 @@ class _ChangeEmailViewState extends State<ChangeEmailView> {
             email: _textEditingController[1].text.trim(),
           ));
     } else {
-      customSnackbar(false, "Email field must be filled.");
+      customSnackbar(false, "emailFieldMustBeFilled".tr);
     }
   }
 }
