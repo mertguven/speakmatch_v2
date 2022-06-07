@@ -169,9 +169,5 @@ For help getting started with Flutter, view our online
 ## Contact
 
 * Mert Güven - [mertguven.com](http://mertguven.com/#/) - mertguven789@gmail.com
-* Doğukan Yolcuoğlu - [@dogukanyolcuoglu](https://github.com/dogukanyolcuoglu) - dogukan.yolcuoglu09@gmail.com
-* Eray Hamurlu - [erayh.com](http://erayh.com) - hamurlueray@gmail.com
-
-
 
 <p align="right"><a href="#top">⬆️</a></p>
