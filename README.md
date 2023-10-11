@@ -168,6 +168,6 @@ For help getting started with Flutter, view our online
 
 ## Contact
 
-* Mert Güven - [mertguven.com](http://mertguven.com/#/) - mertguven789@gmail.com
+* Mert Güven - [mertguven.net](https://mertguven.net/) - info@mertguven.net
 
 <p align="right"><a href="#top">⬆️</a></p>
